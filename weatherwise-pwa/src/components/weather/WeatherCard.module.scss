@@ -1,0 +1,371 @@
+.weatherCard {
+  position: relative;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    box-shadow: 0 32px 100px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+  }
+}
+
+.cardContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 500px;
+}
+
+.imagePanel {
+  position: relative;
+  overflow: hidden;
+  min-height: 500px;
+
+  &:hover .imageBackground {
+    transform: scale(1.1);
+  }
+}
+
+.imageBackground {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.7s ease;
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+}
+
+.locationInfo {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem;
+  color: white;
+}
+
+.locationHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.locationIcon {
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  opacity: 0.8;
+}
+
+.cityName {
+  font-size: 3.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+}
+
+.address {
+  font-size: 1rem;
+  opacity: 0.85;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.removeButton {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.5);
+    transform: rotate(90deg);
+  }
+}
+
+.detailsPanel {
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #fafafa;
+}
+
+.currentWeather {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.temperatureSection {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.temperatureMain {
+  font-size: 7rem;
+  font-weight: 200;
+  color: #0a0a0a;
+  line-height: 0.9;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.04em;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+}
+
+.feelsLike {
+  font-size: 1rem;
+  color: #6b7280;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.weatherIcon {
+  text-align: right;
+
+  img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.conditionText {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.metricItem {
+  text-align: center;
+}
+
+.metricIcon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  color: #9ca3af;
+}
+
+.metricValue {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.metricLabel {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.forecastSection {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.forecastTitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+}
+
+.forecastList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.forecastDay {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #f9fafb;
+  }
+}
+
+.forecastLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.dayName {
+  width: 3rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.forecastIcon {
+  width: 32px;
+  height: 32px;
+}
+
+.forecastCondition {
+  flex: 1;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.forecastTemps {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.tempMax {
+  font-weight: 600;
+  color: #111827;
+}
+
+.tempSeparator {
+  color: #d1d5db;
+}
+
+.tempMin {
+  color: #6b7280;
+}
+
+.loadingCard {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  height: 384px;
+}
+
+.loadingContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100%;
+}
+
+.loadingSkeleton {
+  background: #e5e7eb;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.loadingContent {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.skeletonTitle {
+  height: 2rem;
+  background: #e5e7eb;
+  border-radius: 8px;
+  width: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.skeletonTemp {
+  height: 5rem;
+  background: #e5e7eb;
+  border-radius: 8px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.skeletonMetrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.skeletonMetric {
+  height: 4rem;
+  background: #e5e7eb;
+  border-radius: 8px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.errorCard {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding: 3rem;
+}
+
+.errorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.errorTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.errorContent {
+  background: #fef2f2;
+  border-left: 4px solid #ef4444;
+  padding: 1.5rem;
+}
+
+.errorHeading {
+  font-weight: 600;
+  color: #7f1d1d;
+  margin-bottom: 0.5rem;
+}
+
+.errorMessage {
+  font-size: 0.875rem;
+  color: #991b1b;
+}
