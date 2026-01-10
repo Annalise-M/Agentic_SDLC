@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Cloud, MapPin, Sparkles } from 'lucide-react';
+import { IoCloudSharp, IoLocationSharp, IoSparkles } from 'react-icons/io5';
 import { LocationSearch } from './components/search/LocationSearch';
 import { WeatherCard } from './components/weather/WeatherCard';
 import { useLocationStore } from './store/locations-store';
@@ -56,7 +56,7 @@ function App() {
         <div className="relative bg-gradient-to-r from-amber-400 to-orange-400 border-b border-amber-500/20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <p className="text-sm text-white font-medium flex items-center gap-2">
-              <Sparkles className="w-4 h-4" />
+              <IoSparkles className="w-4 h-4" />
               <span>
                 <strong>Demo Mode:</strong> Using sample data. Get real weather at{' '}
                 <a
@@ -79,7 +79,7 @@ function App() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-2xl shadow-lg shadow-blue-500/20">
-                <Cloud className="w-8 h-8 text-white" strokeWidth={2.5} />
+                <IoCloudSharp className="w-8 h-8 text-white" />
               </div>
               <div>
                 <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
@@ -142,7 +142,7 @@ function App() {
             {isDetectingLocation || geolocation.loading ? (
               <div className="inline-flex flex-col items-center gap-4 px-8 py-12 bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200/50 shadow-xl shadow-blue-500/5">
                 <div className="relative">
-                  <MapPin className="w-16 h-16 text-blue-500 animate-pulse" />
+                  <IoLocationSharp className="w-16 h-16 text-blue-500 animate-pulse" />
                   <div className="absolute inset-0 bg-blue-500 rounded-full blur-xl opacity-20 animate-pulse"></div>
                 </div>
                 <div>
@@ -156,7 +156,7 @@ function App() {
               </div>
             ) : (
               <div className="inline-flex flex-col items-center gap-4 px-8 py-12 bg-white/60 backdrop-blur-sm rounded-3xl border border-dashed border-gray-300">
-                <Cloud className="w-16 h-16 text-gray-300" />
+                <IoCloudSharp className="w-16 h-16 text-gray-300" />
                 <div>
                   <h3 className="text-xl font-semibold text-gray-600 mb-2">
                     Ready to compare
@@ -190,7 +190,7 @@ function App() {
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-2xl p-6 backdrop-blur-sm">
               <div className="flex items-start gap-4">
                 <div className="bg-blue-500 p-2 rounded-xl">
-                  <Sparkles className="w-5 h-5 text-white" />
+                  <IoSparkles className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-1">

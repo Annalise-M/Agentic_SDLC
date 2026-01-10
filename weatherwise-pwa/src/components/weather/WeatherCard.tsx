@@ -1,4 +1,5 @@
-import { X, Droplets, Wind, Eye, Gauge, Sun, MapPin } from 'lucide-react';
+import { IoClose, IoWater, IoEye, IoSpeedometer, IoSunny, IoLocationSharp } from 'react-icons/io5';
+import { WiStrongWind } from 'react-icons/wi';
 import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
@@ -79,7 +80,7 @@ export function WeatherCard({ location }: WeatherCardProps) {
             className={styles.removeButton}
             aria-label="Remove location"
           >
-            <X size={20} />
+            <IoClose size={20} />
           </button>
         </div>
         <div className={styles.errorContent}>
@@ -127,7 +128,7 @@ export function WeatherCard({ location }: WeatherCardProps) {
 
           <div className={styles.locationInfo}>
             <div className={styles.locationHeader}>
-              <MapPin className={styles.locationIcon} />
+              <IoLocationSharp className={styles.locationIcon} />
               <div>
                 <h2 className={styles.cityName}>
                   {cityName}
@@ -144,7 +145,7 @@ export function WeatherCard({ location }: WeatherCardProps) {
             className={styles.removeButton}
             aria-label="Remove location"
           >
-            <X size={20} />
+            <IoClose size={20} />
           </button>
         </div>
 
@@ -175,32 +176,32 @@ export function WeatherCard({ location }: WeatherCardProps) {
             {/* Metrics Grid */}
             <div className={styles.metricsGrid}>
               <MetricItem
-                icon={<Droplets size={16} />}
+                icon={<IoWater size={16} />}
                 label="Humidity"
                 value={`${Math.round(currentConditions.humidity)}%`}
               />
               <MetricItem
-                icon={<Wind size={16} />}
+                icon={<WiStrongWind size={20} />}
                 label="Wind"
                 value={`${Math.round(currentConditions.windspeed)} km/h`}
               />
               <MetricItem
-                icon={<Sun size={16} />}
+                icon={<IoSunny size={16} />}
                 label="UV Index"
                 value={Math.round(currentConditions.uvindex || 0)}
               />
               <MetricItem
-                icon={<Eye size={16} />}
+                icon={<IoEye size={16} />}
                 label="Visibility"
                 value={`${Math.round(currentConditions.visibility)} km`}
               />
               <MetricItem
-                icon={<Gauge size={16} />}
+                icon={<IoSpeedometer size={16} />}
                 label="Pressure"
                 value={`${Math.round(currentConditions.pressure)} mb`}
               />
               <MetricItem
-                icon={<Droplets size={16} />}
+                icon={<IoWater size={16} />}
                 label="Rain"
                 value={`${Math.round(currentConditions.precipprob || 0)}%`}
               />
