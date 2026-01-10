@@ -25,9 +25,9 @@ async function fetchHistoricalWeather(location: string): Promise<HistoricalWeath
   const API_KEY = import.meta.env.VITE_VISUAL_CROSSING_API_KEY;
   const BASE_URL = 'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline';
 
-  // Get data from the past 3 years
+  // Get data from the past year (365 days to stay within API limits)
   const currentYear = new Date().getFullYear();
-  const startDate = `${currentYear - 3}-01-01`;
+  const startDate = `${currentYear - 1}-01-01`;
   const endDate = `${currentYear - 1}-12-31`;
 
   const url = `${BASE_URL}/${encodeURIComponent(location)}/${startDate}/${endDate}?key=${API_KEY}&unitGroup=metric&include=days&elements=datetime,tempmax,tempmin,temp,precip,precipprob,humidity,windspeed,conditions`;

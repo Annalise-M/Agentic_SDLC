@@ -18,7 +18,25 @@ export function BestTimeToVisit({ location }: BestTimeToVisitProps) {
     );
   }
 
-  if (error || !data) {
+  if (error) {
+    return (
+      <div className="bg-amber-50 backdrop-blur-sm rounded-2xl border border-amber-200/50 p-6">
+        <div className="flex items-start gap-3">
+          <div className="p-2 bg-amber-500/10 rounded-xl">
+            <IoCalendar className="w-5 h-5 text-amber-600" />
+          </div>
+          <div>
+            <h4 className="font-semibold text-amber-900 mb-1">Historical data temporarily unavailable</h4>
+            <p className="text-sm text-amber-700">
+              API limit reached. Best time to visit analysis will be available tomorrow.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) {
     return null;
   }
 
@@ -124,7 +142,7 @@ export function BestTimeToVisit({ location }: BestTimeToVisitProps) {
         {/* Info Footer */}
         <div className="mt-6 pt-4 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
-            Based on 3 years of historical weather data. Scores consider temperature, precipitation, humidity, and wind conditions.
+            Based on historical weather data from last year. Scores consider temperature, precipitation, humidity, and wind conditions.
           </p>
         </div>
       </div>
