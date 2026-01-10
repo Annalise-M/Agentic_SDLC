@@ -6,6 +6,7 @@ import { useWeather } from '../../lib/hooks/useWeather';
 import { useLocationStore } from '../../store/locations-store';
 import { getWeatherIconUrl } from '../../lib/api/weather';
 import { getLocationImageAsync, getLocationGradient } from '../../lib/api/unsplash';
+import { convertTemperature, getTemperatureSymbol } from '../../lib/utils/temperature';
 import type { WeatherDay } from '../../types/weather';
 import styles from './WeatherCard.module.scss';
 
@@ -16,7 +17,7 @@ interface WeatherCardProps {
 export function WeatherCard({ location }: WeatherCardProps) {
   console.log('✨ NEW SCSS WeatherCard rendering for:', location);
   const { data, isLoading, error } = useWeather(location);
-  const { removeLocation } = useLocationStore();
+  const { removeLocation, temperatureUnit } = useLocationStore();
   const cardRef = useRef<HTMLDivElement>(null);
   const [locationImage, setLocationImage] = useState<string>('');
 
@@ -95,7 +96,18 @@ export function WeatherCard({ location }: WeatherCardProps) {
 
   const currentConditions = data.currentConditions || data.days[0];
   const forecast = data.days.slice(0, 7);
-  const temp = Math.round(currentConditions.temp);
+  const temp = convertTemperature(currentConditions.temp, temperatureUnit);
+  const feelsLike = convertTemperature(currentConditions.feelslike, temperatureUnit);
+  const tempSymbol = getTemperatureSymbol(temperatureUnit);
+
+  // Clean up location display to avoid duplication
+  const cityName = location.split(',')[0].trim();
+  const fullAddress = data.resolvedAddress;
+
+  // Remove city name from address if it starts with it to avoid repetition
+  const cleanAddress = fullAddress.startsWith(cityName)
+    ? fullAddress.substring(cityName.length).replace(/^,\s*/, '')
+    : fullAddress;
 
   // Use fetched location image or gradient fallback
   const backgroundStyle = locationImage
@@ -118,9 +130,11 @@ export function WeatherCard({ location }: WeatherCardProps) {
               <MapPin className={styles.locationIcon} />
               <div>
                 <h2 className={styles.cityName}>
-                  {location.split(',')[0]}
+                  {cityName}
                 </h2>
-                <p className={styles.address}>{data.resolvedAddress}</p>
+                {cleanAddress && (
+                  <p className={styles.address}>{cleanAddress}</p>
+                )}
               </div>
             </div>
           </div>
@@ -144,7 +158,7 @@ export function WeatherCard({ location }: WeatherCardProps) {
                   {temp}°
                 </div>
                 <p className={styles.feelsLike}>
-                  Feels like {Math.round(currentConditions.feelslike)}°C
+                  Feels like {feelsLike}{tempSymbol}
                 </p>
               </div>
               <div className={styles.weatherIcon}>
@@ -200,7 +214,7 @@ export function WeatherCard({ location }: WeatherCardProps) {
             </h3>
             <div className={styles.forecastList}>
               {forecast.slice(0, 5).map((day: WeatherDay) => (
-                <ForecastDay key={day.datetime} day={day} />
+                <ForecastDay key={day.datetime} day={day} temperatureUnit={temperatureUnit} />
               ))}
             </div>
           </div>
@@ -230,13 +244,14 @@ function MetricItem({ icon, label, value }: MetricItemProps) {
 
 interface ForecastDayProps {
   day: WeatherDay;
+  temperatureUnit: 'celsius' | 'fahrenheit';
 }
 
-function ForecastDay({ day }: ForecastDayProps) {
+function ForecastDay({ day, temperatureUnit }: ForecastDayProps) {
   const date = new Date(day.datetime);
   const dayName = format(date, 'EEE');
-  const tempMax = Math.round(day.tempmax);
-  const tempMin = Math.round(day.tempmin);
+  const tempMax = convertTemperature(day.tempmax, temperatureUnit);
+  const tempMin = convertTemperature(day.tempmin, temperatureUnit);
 
   return (
     <div className={styles.forecastDay}>

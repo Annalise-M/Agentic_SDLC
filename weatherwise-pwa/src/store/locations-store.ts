@@ -1,12 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+export type TemperatureUnit = 'celsius' | 'fahrenheit';
+
 export interface LocationState {
   locations: string[];
   addLocation: (location: string) => void;
   removeLocation: (location: string) => void;
   clearLocations: () => void;
   maxLocations: number;
+  temperatureUnit: TemperatureUnit;
+  toggleTemperatureUnit: () => void;
 }
 
 /**
@@ -18,6 +22,7 @@ export const useLocationStore = create<LocationState>()(
     (set) => ({
       locations: [],
       maxLocations: 5,
+      temperatureUnit: 'celsius',
 
       addLocation: (location: string) =>
         set((state) => {
@@ -42,6 +47,11 @@ export const useLocationStore = create<LocationState>()(
         })),
 
       clearLocations: () => set({ locations: [] }),
+
+      toggleTemperatureUnit: () =>
+        set((state) => ({
+          temperatureUnit: state.temperatureUnit === 'celsius' ? 'fahrenheit' : 'celsius',
+        })),
     }),
     {
       name: 'weatherwise-locations',

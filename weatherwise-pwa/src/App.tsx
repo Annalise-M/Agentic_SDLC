@@ -6,7 +6,7 @@ import { useLocationStore } from './store/locations-store';
 import { useGeolocation, reverseGeocode } from './lib/hooks/useGeolocation';
 
 function App() {
-  const { locations, addLocation } = useLocationStore();
+  const { locations, addLocation, temperatureUnit, toggleTemperatureUnit } = useLocationStore();
   const geolocation = useGeolocation();
   const [isDetectingLocation, setIsDetectingLocation] = useState(false);
 
@@ -90,6 +90,20 @@ function App() {
                 </p>
               </div>
             </div>
+
+            {/* Temperature Unit Toggle */}
+            <button
+              onClick={toggleTemperatureUnit}
+              className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200"
+              aria-label="Toggle temperature unit"
+            >
+              <span className="text-sm font-medium text-gray-700">
+                {temperatureUnit === 'celsius' ? '°C' : '°F'}
+              </span>
+              <span className="text-xs text-gray-500">
+                {temperatureUnit === 'celsius' ? 'Celsius' : 'Fahrenheit'}
+              </span>
+            </button>
           </div>
         </div>
       </header>
@@ -155,16 +169,18 @@ function App() {
             )}
           </div>
         ) : (
-          <div className="space-y-6 animate-scale-in">
-            {locations.map((location, index) => (
-              <div
-                key={location}
-                className="animate-slide-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <WeatherCard location={location} />
-              </div>
-            ))}
+          <div className="carousel-container">
+            <div className="carousel-track">
+              {locations.map((location, index) => (
+                <div
+                  key={location}
+                  className="carousel-item"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <WeatherCard location={location} />
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

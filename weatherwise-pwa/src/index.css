@@ -1,3 +1,64 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Horizontal Carousel for Weather Cards */
+.carousel-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  padding: 2rem 0;
+
+  /* Hide scrollbar but keep functionality */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(59, 130, 246, 0.5) transparent;
+}
+
+.carousel-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.carousel-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.carousel-container::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.3);
+  border-radius: 4px;
+}
+
+.carousel-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.5);
+}
+
+.carousel-track {
+  display: flex;
+  gap: 2rem;
+  padding: 0 max(2rem, calc(50vw - 600px));
+  min-width: min-content;
+}
+
+.carousel-item {
+  flex: 0 0 min(90vw, 500px);
+  scroll-snap-align: center;
+  animation: slideInCarousel 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes slideInCarousel {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Single card should be centered */
+.carousel-track:has(.carousel-item:only-child) {
+  justify-content: center;
+}
