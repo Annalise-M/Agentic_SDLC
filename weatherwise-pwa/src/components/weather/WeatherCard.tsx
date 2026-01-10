@@ -8,6 +8,7 @@ import { useLocationStore } from '../../store/locations-store';
 import { getWeatherIconUrl } from '../../lib/api/weather';
 import { getLocationImageAsync, getLocationGradient } from '../../lib/api/unsplash';
 import { convertTemperature, getTemperatureSymbol } from '../../lib/utils/temperature';
+import { BestTimeToVisit } from './BestTimeToVisit';
 import type { WeatherDay } from '../../types/weather';
 import styles from './WeatherCard.module.scss';
 

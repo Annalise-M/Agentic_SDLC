@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { IoCloudSharp, IoLocationSharp, IoSparkles } from 'react-icons/io5';
 import { LocationSearch } from './components/search/LocationSearch';
 import { WeatherCard } from './components/weather/WeatherCard';
+import { BestTimeToVisit } from './components/weather/BestTimeToVisit';
 import { useLocationStore } from './store/locations-store';
 import { useGeolocation, reverseGeocode } from './lib/hooks/useGeolocation';
 
@@ -169,19 +170,40 @@ function App() {
             )}
           </div>
         ) : (
-          <div className="carousel-container">
-            <div className="carousel-track">
-              {locations.map((location, index) => (
-                <div
-                  key={location}
-                  className="carousel-item"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <WeatherCard location={location} />
-                </div>
-              ))}
+          <>
+            <div className="carousel-container">
+              <div className="carousel-track">
+                {locations.map((location, index) => (
+                  <div
+                    key={location}
+                    className="carousel-item"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <WeatherCard location={location} />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+
+            {/* Best Time to Visit Analysis */}
+            <div className="mt-16">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                  Best Time to Visit
+                </h2>
+                <p className="text-gray-600">
+                  Historical analysis to help you plan the perfect trip
+                </p>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {locations.map((location) => (
+                  <div key={location} className="animate-fade-in">
+                    <BestTimeToVisit location={location} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
         )}
 
         {/* Tip Card */}
