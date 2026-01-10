@@ -66,9 +66,38 @@ export function useGeolocation() {
 }
 
 /**
- * Reverse geocode coordinates to location name using Visual Crossing API
+ * Reverse geocode coordinates to location name using OpenStreetMap Nominatim (more accurate)
+ * Falls back to Visual Crossing if needed
  */
 export async function reverseGeocode(latitude: number, longitude: number): Promise<string> {
+  console.log(`📍 Reverse geocoding coordinates: ${latitude}, ${longitude}`);
+
+  // Try OpenStreetMap Nominatim first (free, no API key needed, more accurate)
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10`,
+      {
+        headers: {
+          'User-Agent': 'WeatherWise PWA (contact: weatherwise@example.com)'
+        }
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.address) {
+        // Extract city, state, country
+        const { city, town, village, state, country } = data.address;
+        const locationName = city || town || village || state || country || 'Unknown Location';
+        console.log(`📍 Resolved to: ${locationName}`);
+        return locationName;
+      }
+    }
+  } catch (error) {
+    console.warn('OpenStreetMap Nominatim failed, trying Visual Crossing:', error);
+  }
+
+  // Fallback to Visual Crossing
   const API_KEY = import.meta.env.VITE_VISUAL_CROSSING_API_KEY;
   const BASE_URL = 'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline';
 
@@ -78,13 +107,15 @@ export async function reverseGeocode(latitude: number, longitude: number): Promi
     );
 
     if (!response.ok) {
-      throw new Error('Failed to reverse geocode');
+      throw new Error('Failed to reverse geocode with Visual Crossing');
     }
 
     const data = await response.json();
-    return data.resolvedAddress || `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
+    const resolved = data.resolvedAddress || `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
+    console.log(`📍 Visual Crossing resolved to: ${resolved}`);
+    return resolved;
   } catch (error) {
     console.error('Reverse geocode error:', error);
-    return `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
+    return `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
   }
 }

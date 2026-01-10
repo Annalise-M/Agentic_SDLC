@@ -22,11 +22,11 @@ export function WeatherCard({ location }: WeatherCardProps) {
 
   // Fetch location-specific landscape image (deterministic, no people)
   useEffect(() => {
-    if (location) {
+    if (location && !locationImage) {
       console.log(`🏙️ Fetching landscape image for ${location}`);
       getLocationImageAsync(location, 1600, 1200).then(setLocationImage);
     }
-  }, [location]);
+  }, [location]); // Only fetch if location changes, prevent refetching
 
   // GSAP entrance animation
   useEffect(() => {
