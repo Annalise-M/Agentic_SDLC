@@ -5,40 +5,42 @@ A sleek, magazine-style Progressive Web App for comparing weather across multipl
 ## ✨ Features
 
 ### Core Weather Features
-- **Multi-Location Weather Comparison**: Compare weather conditions for up to 5 locations side-by-side
+- **Multi-Location Weather Comparison**: Compare weather conditions for up to 5 locations side-by-side in a beautiful horizontal carousel
 - **7-Day Forecast**: View detailed weather forecasts for the next week
 - **Current Conditions**: Real-time weather data including temperature, humidity, wind speed, UV index, visibility, and pressure
+- **Temperature Unit Toggle**: Switch between Fahrenheit and Celsius with persistent user preference
 - **Visual Weather Icons**: Beautiful weather icons from Visual Crossing API
 
 ### Design & UX
-- **Magazine-Style Layout**: Premium horizontal card design with location images
-- **Location Background Images**: Real cityscape/landscape photos from Pexels API (no people, landscape-only)
+- **Magazine-Style Layout**: Premium horizontal carousel design with full-background location cards
+- **Location Background Images**: Real cityscape/landscape photos from Pexels API (landscape-only, random rotation)
 - **Smooth GSAP Animations**: Professional entrance animations and micro-interactions
 - **Auto-Location Detection**: Automatically detects and adds user's current location on first visit
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
-- **Persistent State**: Selected locations are saved in localStorage
+- **Fully Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- **Persistent State**: Selected locations and preferences saved in localStorage
+- **Modern Icons**: Ionicons 5 (react-icons) for a consistent, filled aesthetic
 
 ### Performance
 - **Smart Caching**: Weather data is cached for 30 minutes to reduce API calls
 - **Demo Mode**: Fallback to mock data when API keys are not configured
+- **Optimized Images**: Location images cached for fast loading
 
 ## 🛠️ Tech Stack
 
 ### Core
 - **Frontend**: React 19 + TypeScript
 - **Build Tool**: Vite 7.3
-- **Styling**: SCSS Modules (CSS-in-JS alternative)
+- **Styling**: SCSS Modules + Tailwind CSS
 - **Animations**: GSAP (GreenSock Animation Platform)
 - **State Management**: Zustand (with localStorage persistence)
 - **Data Fetching**: TanStack Query v5 (React Query)
-- **HTTP Client**: Axios
 - **Date Handling**: date-fns
-- **Icons**: lucide-react
+- **Icons**: react-icons (Ionicons 5 + Weather Icons)
 
 ### APIs
 - **Weather**: Visual Crossing Weather API (1000 records/day free tier)
 - **Images**: Pexels API (free tier with attribution)
-- **Geolocation**: Browser Geolocation API + Visual Crossing reverse geocoding
+- **Geolocation**: Browser Geolocation API + OpenStreetMap Nominatim reverse geocoding
 
 ## 📁 Project Structure
 
@@ -57,16 +59,18 @@ weatherwise-pwa/
 │   │   │   └── unsplash.ts                  # Pexels image API client
 │   │   ├── data/
 │   │   │   └── mock-weather.ts              # Demo mode fallback data
-│   │   └── hooks/
-│   │       ├── useWeather.ts                # React Query hook for weather
-│   │       └── useGeolocation.ts            # Auto-location detection hook
+│   │   ├── hooks/
+│   │   │   ├── useWeather.ts                # React Query hook for weather
+│   │   │   └── useGeolocation.ts            # Auto-location detection hook
+│   │   └── utils/
+│   │       └── temperature.ts               # F/C conversion utilities
 │   ├── store/
-│   │   └── locations-store.ts               # Zustand store for locations
+│   │   └── locations-store.ts               # Zustand store (locations + temp unit)
 │   ├── types/
 │   │   └── weather.ts                       # TypeScript interfaces
 │   ├── App.tsx                              # Main application component
 │   ├── main.tsx                             # Application entry point
-│   └── index.css                            # Global styles
+│   └── index.css                            # Global styles + carousel CSS
 ├── .env                                     # Environment variables (not committed)
 ├── .env.example                             # Example environment variables
 └── package.json
@@ -126,49 +130,58 @@ The application will open at `http://localhost:3000`
 1. **Auto-Location Detection**
    - On first visit, browser will request location permission
    - If granted, your current location will be automatically added
-   - Location name is resolved via reverse geocoding
+   - Location name is resolved via OpenStreetMap Nominatim (more accurate)
 
 2. **Search for Locations**
    - Click on the search bar
    - Type a city name (e.g., "Barcelona", "Tokyo", "Paris")
-   - Select from suggestions
+   - Select from popular destination suggestions
    - Magazine-style weather card appears with:
-     - Real location photo (cityscape/landscape)
-     - Current temperature (large editorial typography)
+     - Real location photo (cityscape/landscape, random on each reload)
+     - Current temperature with F/C toggle
      - Weather icon and conditions
-     - Key metrics (humidity, wind, UV, etc.)
+     - 6 key metrics (humidity, wind, UV, visibility, pressure, rain)
      - 5-day forecast preview
 
 3. **Compare Multiple Locations**
    - Add up to 5 locations total
-   - Cards stack vertically with staggered entrance animations
-   - Each location gets a unique, consistent image
+   - Cards display in horizontal scrollable carousel
+   - Centered layout with smooth scroll
+   - Each location gets a random landscape image
 
-4. **Remove Locations**
+4. **Toggle Temperature Units**
+   - Click the °C / °F button in the header
+   - Instantly converts all temperatures across all cards
+   - Preference saved to localStorage
+
+5. **Remove Locations**
    - Click the X button on any card
-   - Smooth GSAP exit animation
+   - Smooth animation
    - Location removed from localStorage
 
-5. **Test Persistence**
+6. **Test Persistence**
    - Refresh the page
-   - Your locations should persist
+   - Your locations and temperature unit preference persist
 
 ### Features to Verify
 
-- [x] Auto-location detection on first visit
-- [x] Location search with suggestions
+- [x] Auto-location detection on first visit (OpenStreetMap Nominatim)
+- [x] Location search with popular destination suggestions
 - [x] Real weather data from Visual Crossing API
-- [x] Magazine-style horizontal card layout
-- [x] Location background images from Pexels
+- [x] Horizontal carousel layout (centered, scrollable)
+- [x] Full-background card design with location images from Pexels
+- [x] Random image rotation per page reload
 - [x] Smooth GSAP entrance animations
 - [x] Current temperature and conditions
-- [x] 7 key weather metrics displayed
+- [x] 6 key weather metrics displayed
 - [x] 5-day forecast in card
+- [x] Fahrenheit/Celsius toggle with persistence
 - [x] Maximum 5 locations enforced
-- [x] Remove button works with animation
-- [x] Locations persist in localStorage
+- [x] Remove button works with proper z-index
+- [x] Locations and preferences persist in localStorage
 - [x] Loading skeleton while fetching
 - [x] Demo mode fallback when no API keys
+- [x] Fully responsive (mobile, tablet, desktop)
 
 ## 📊 API Usage and Rate Limits
 
@@ -182,7 +195,12 @@ The application will open at `http://localhost:3000`
 - **Limit**: Unlimited searches, attribution required
 - **Usage**: 1 request per location (cached in browser)
 - **Features**: Landscape-only images, no people in focus
-- **Selection**: Deterministic - same location = same image
+- **Selection**: Random on each page reload for variety
+
+### OpenStreetMap Nominatim
+- **Limit**: Free, no API key required
+- **Usage**: Reverse geocoding for auto-location
+- **Policy**: Must include User-Agent header (implemented)
 
 ## 🏗️ Build for Production
 
@@ -220,65 +238,78 @@ The app can be deployed to:
 ### Images Not Showing
 - Check browser console for Pexels API errors
 - Verify `VITE_PEXELS_API_KEY` is set correctly
-- If no key provided, app falls back to Lorem Picsum
+- If no key provided, app falls back to gradient backgrounds
 
 ### Auto-Location Not Working
 - Grant browser location permission when prompted
 - Check browser console for geolocation errors
 - Clear localStorage key `auto-location-detected` to retry
 
-## 📋 Development Phases
+### Text Overlap on Cards
+- Verified fixed with proper spacing and absolute positioning
+- Location info pinned to top, weather details at bottom
+
+## 📋 Development Roadmap
 
 ### ✅ Phase 1: Foundation (COMPLETE)
 - [x] Vite + React + TypeScript setup
 - [x] Visual Crossing Weather API integration
 - [x] Location search with autocomplete
 - [x] Demo mode fallback
-- [x] Zustand state management
-- [x] Auto-location detection
-- [x] **Magazine-style SCSS layout**
-- [x] **GSAP animations**
-- [x] **Pexels location images**
+- [x] Zustand state management with localStorage
+- [x] Auto-location detection (OpenStreetMap Nominatim)
+- [x] Magazine-style SCSS carousel layout
+- [x] GSAP animations
+- [x] Pexels location images (random rotation)
+- [x] Fahrenheit/Celsius toggle
+- [x] react-icons integration (Ionicons 5)
+- [x] Fully responsive design
+- [x] Text overlap fixes
 
-### 🚧 Phase 2: Historical Data & Best Time to Visit
-- [ ] Historical weather API endpoint
-- [ ] Best time calculator (3-5 years analysis)
-- [ ] Visual charts showing optimal months
-
-### 📅 Phase 3: Smart Recommendations
+### 📅 Phase 3: Smart Recommendations (OPTIONAL EXTRAS)
 - [ ] Packing list generator (weather-based)
 - [ ] Activity suggestions (weather-appropriate)
+- [ ] Trip duration and preferences UI
 
-### 📱 Phase 4: PWA Features
-- [ ] Service worker setup
-- [ ] Offline caching with IndexedDB
-- [ ] Install prompt
-- [ ] App manifest
+*Note: Phase 3 is considered optional enhancement features, not core functionality.*
+
+### 📱 Phase 4: PWA Features (NEXT)
+- [ ] PWA manifest configuration
+- [ ] Service worker setup for offline support
+- [ ] IndexedDB caching strategy
+- [ ] "Add to Home Screen" prompt
+- [ ] Lighthouse PWA score optimization (target: 95+)
 
 ### 💰 Phase 5: Monetization
-- [ ] Flight affiliate (Skyscanner)
-- [ ] Hotel booking (Booking.com)
-- [ ] Travel insurance
-- [ ] Language learning with progress tracking
+- [ ] Flight search affiliate integration (Skyscanner)
+- [ ] Hotel booking affiliate integration (Booking.com)
+- [ ] Travel insurance affiliate (SafetyWing/World Nomads)
+- [ ] Language learning integration with progress tracking
 
-### 🚀 Phase 6: Polish & Deploy
-- [ ] Testing
-- [ ] SEO optimization
-- [ ] Production deployment
+### 🚀 Phase 6: Testing & Launch
+- [ ] Unit tests (Vitest)
+- [ ] Integration tests for API routes
+- [ ] E2E tests (Playwright)
+- [ ] SEO optimization (OpenGraph, Twitter Cards)
+- [ ] Production deployment to custom domain
+- [ ] Performance monitoring (Sentry + Vercel Analytics)
 
 ## 🎨 Design Philosophy
 
 WeatherWise follows a **sleek online magazine aesthetic**:
 - Large, editorial typography (SF Pro Display font stack)
-- Premium horizontal card layouts
-- Professional photography (landscape-only, no people)
+- Premium horizontal carousel with centered cards
+- Full-background imagery with gradient overlays
+- Professional photography (landscape-only, random rotation)
 - Smooth, polished GSAP animations
+- Modern Ionicons with filled aesthetic
 - Clean color palette with subtle gradients
 - Generous whitespace and breathing room
+- White text with shadows for legibility over images
 
 ## 🤝 Contributing
 
-This is a learning project demonstrating modern React patterns, SCSS modules, and GSAP animations. Feel free to fork and experiment!
+This is a learning project demonstrating modern React patterns, SCSS modules, GSAP animations, and PWA capabilities. Feel free to fork and experiment!
 
 ## 📄 License
 
@@ -288,11 +319,13 @@ MIT
 
 - Weather data: [Visual Crossing Weather API](https://www.visualcrossing.com/)
 - Location photos: [Pexels](https://www.pexels.com/)
-- Icons: [Lucide React](https://lucide.dev/)
+- Icons: [react-icons](https://react-icons.github.io/react-icons/) (Ionicons 5 + Weather Icons)
+- Reverse geocoding: [OpenStreetMap Nominatim](https://nominatim.openstreetmap.org/)
 - Animations: [GSAP](https://greensock.com/gsap/)
 - Built with [Vite](https://vitejs.dev/) + [React](https://react.dev/)
 - Built with ❤️ for travelers
 
 ---
 
-**🎨 Magazine layout version loaded - Jan 9, 2026**
+**Current Status**: Phase 1 Complete | Next: PWA Features (Phase 4)
+**Last Updated**: January 10, 2026
