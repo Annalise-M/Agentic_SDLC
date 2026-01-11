@@ -6,4 +6,3 @@ model: sonnet
 color: cyan
 ---
 
-create new agent
