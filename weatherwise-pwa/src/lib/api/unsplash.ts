@@ -28,25 +28,10 @@ export function getLocationGradient(location: string): string {
 }
 
 /**
- * Generate a deterministic number from a string (for consistent image selection)
- */
-function hashString(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return Math.abs(hash);
-}
-
-/**
  * Fetch actual location landscape image from Pexels (no people, deterministic selection)
  */
 async function fetchPexelsImage(
-  location: string,
-  width: number,
-  height: number
+  location: string
 ): Promise<string | null> {
   if (!PEXELS_API_KEY || PEXELS_API_KEY === 'your_pexels_key_here') {
     return null;
@@ -113,7 +98,7 @@ export async function getLocationImageAsync(
   height: number = 1200
 ): Promise<string> {
   // Try Pexels first - landscape/cityscape only
-  const pexelsImage = await fetchPexelsImage(location, width, height);
+  const pexelsImage = await fetchPexelsImage(location);
   if (pexelsImage) return pexelsImage;
 
   // Fallback to Picsum

@@ -1,4 +1,4 @@
-import { useState, KeyboardEvent } from 'react';
+import { useState, type KeyboardEvent } from 'react';
 import { IoSearch, IoLocationSharp, IoClose, IoTrendingUp } from 'react-icons/io5';
 import { useLocationStore } from '../../store/locations-store';
 

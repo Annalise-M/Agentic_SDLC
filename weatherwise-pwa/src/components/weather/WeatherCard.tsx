@@ -1,4 +1,4 @@
-import { IoClose, IoWater, IoEye, IoSpeedometer, IoSunny, IoLocationSharp } from 'react-icons/io5';
+import { IoClose, IoWater, IoEye, IoSpeedometer, IoSunny, IoLocationSharp, IoStar, IoStarOutline } from 'react-icons/io5';
 import { WiStrongWind } from 'react-icons/wi';
 import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
@@ -8,6 +8,7 @@ import { useLocationStore } from '../../store/locations-store';
 import { getWeatherIconUrl } from '../../lib/api/weather';
 import { getLocationImageAsync, getLocationGradient } from '../../lib/api/unsplash';
 import { convertTemperature, getTemperatureSymbol } from '../../lib/utils/temperature';
+import { db } from '../../lib/db/indexed-db';
 import type { WeatherDay } from '../../types/weather';
 import styles from './WeatherCard.module.scss';
 
@@ -18,9 +19,10 @@ interface WeatherCardProps {
 export function WeatherCard({ location }: WeatherCardProps) {
   console.log('✨ NEW SCSS WeatherCard rendering for:', location);
   const { data, isLoading, error } = useWeather(location);
-  const { removeLocation, temperatureUnit } = useLocationStore();
+  const { removeLocation, temperatureUnit, toggleOfflineLocation, isOfflineLocation, maxOfflineLocations, offlineLocations } = useLocationStore();
   const cardRef = useRef<HTMLDivElement>(null);
   const [locationImage, setLocationImage] = useState<string>('');
+  const isOffline = isOfflineLocation(location);
 
   // Fetch location-specific landscape image (deterministic, no people)
   useEffect(() => {
@@ -29,6 +31,15 @@ export function WeatherCard({ location }: WeatherCardProps) {
       getLocationImageAsync(location, 1600, 1200).then(setLocationImage);
     }
   }, [location]); // Only fetch if location changes, prevent refetching
+
+  // Cache weather data to IndexedDB when location is saved for offline
+  useEffect(() => {
+    if (data && isOffline) {
+      db.cacheWeather(location, data).catch((err) => {
+        console.error('Failed to cache weather data:', err);
+      });
+    }
+  }, [data, isOffline, location]);
 
   // GSAP entrance animation
   useEffect(() => {
@@ -50,6 +61,23 @@ export function WeatherCard({ location }: WeatherCardProps) {
       );
     }
   }, [data, isLoading]);
+
+  // Handle offline toggle
+  const handleOfflineToggle = () => {
+    if (!isOffline && offlineLocations.length >= maxOfflineLocations) {
+      alert(`You can only save ${maxOfflineLocations} locations for offline use.`);
+      return;
+    }
+
+    toggleOfflineLocation(location);
+
+    if (isOffline) {
+      // Remove from IndexedDB when un-starring
+      db.weatherCache.where('location').equals(location).delete().catch((err) => {
+        console.error('Failed to remove cached weather:', err);
+      });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -138,15 +166,33 @@ export function WeatherCard({ location }: WeatherCardProps) {
                 )}
               </div>
             </div>
+            {isOffline && (
+              <div className={styles.offlineBadge}>
+                <IoStar size={12} />
+                <span>Saved for Offline</span>
+              </div>
+            )}
           </div>
 
-          <button
-            onClick={() => removeLocation(location)}
-            className={styles.removeButton}
-            aria-label="Remove location"
-          >
-            <IoClose size={20} />
-          </button>
+          {/* Action Buttons */}
+          <div className={styles.actionButtons}>
+            <button
+              onClick={handleOfflineToggle}
+              className={`${styles.actionButton} ${isOffline ? styles.offlineActive : ''}`}
+              aria-label={isOffline ? 'Remove from offline' : 'Save for offline'}
+              title={isOffline ? 'Saved for offline' : 'Save for offline'}
+            >
+              {isOffline ? <IoStar size={20} /> : <IoStarOutline size={20} />}
+            </button>
+            <button
+              onClick={() => removeLocation(location)}
+              className={styles.actionButton}
+              aria-label="Remove location"
+              title="Remove location"
+            >
+              <IoClose size={20} />
+            </button>
+          </div>
         </div>
 
         {/* Right Side - Weather Details */}

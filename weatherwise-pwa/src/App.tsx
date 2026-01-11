@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { IoCloudSharp, IoLocationSharp, IoSparkles } from 'react-icons/io5';
 import { LocationSearch } from './components/search/LocationSearch';
 import { WeatherCard } from './components/weather/WeatherCard';
+import { InstallPrompt } from './components/pwa/InstallPrompt';
 import { useLocationStore } from './store/locations-store';
 import { useGeolocation, reverseGeocode } from './lib/hooks/useGeolocation';
 
@@ -227,6 +228,9 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* PWA Install Prompt */}
+      <InstallPrompt />
     </div>
   );
 }
