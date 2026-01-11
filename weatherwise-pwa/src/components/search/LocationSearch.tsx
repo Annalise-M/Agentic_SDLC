@@ -62,12 +62,22 @@ export function LocationSearch({ placeholder = 'Search destinations...', classNa
   return (
     <div className={`relative w-full ${className}`}>
       <div className="relative group">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur-xl opacity-0 group-hover:opacity-20 group-focus-within:opacity-30 transition-opacity duration-300"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur-xl opacity-0 group-hover:opacity-20 group-focus-within:opacity-30 transition-opacity duration-300" aria-hidden="true"></div>
 
         <div className="relative backdrop-blur-sm bg-white/80 rounded-2xl border border-white/50 shadow-lg hover:shadow-xl transition-all duration-300">
-          <IoSearch className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+          <IoSearch className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" aria-hidden="true" />
+          <label htmlFor="location-search" className="sr-only">
+            Search for travel destinations
+          </label>
           <input
+            id="location-search"
             type="text"
+            role="combobox"
+            aria-label="Search for travel destinations"
+            aria-expanded={showSuggestions && !isMaxReached}
+            aria-autocomplete="list"
+            aria-controls="location-suggestions"
+            aria-activedescendant={undefined}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onFocus={() => setShowSuggestions(true)}
@@ -75,13 +85,14 @@ export function LocationSearch({ placeholder = 'Search destinations...', classNa
             onKeyDown={handleKeyDown}
             placeholder={isMaxReached ? `Maximum ${maxLocations} locations` : placeholder}
             disabled={isMaxReached}
-            className="w-full pl-14 pr-14 py-4 bg-transparent text-gray-900 placeholder-gray-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            className="w-full pl-14 pr-14 py-4 bg-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed font-medium"
           />
           {input && (
             <button
               onClick={() => setInput('')}
-              className="absolute right-5 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-200/50 text-gray-400 hover:text-gray-600 transition-all"
+              className="absolute right-5 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-200/50 text-gray-400 hover:text-gray-600 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
               type="button"
+              aria-label="Clear search input"
             >
               <IoClose className="w-4 h-4" />
             </button>
@@ -91,9 +102,14 @@ export function LocationSearch({ placeholder = 'Search destinations...', classNa
 
       {/* Suggestions Dropdown */}
       {showSuggestions && !isMaxReached && filteredSuggestions.length > 0 && (
-        <div className="absolute z-20 w-full mt-3 backdrop-blur-md bg-white/90 border border-white/50 rounded-2xl shadow-2xl overflow-hidden animate-slide-up">
+        <div
+          id="location-suggestions"
+          role="listbox"
+          aria-label="Location suggestions"
+          className="absolute z-20 w-full mt-3 backdrop-blur-md bg-white/90 border border-white/50 rounded-2xl shadow-2xl overflow-hidden animate-slide-up"
+        >
           {input.length === 0 && (
-            <div className="px-6 py-3 bg-gradient-to-r from-gray-50/80 to-blue-50/80 border-b border-white/50">
+            <div className="px-6 py-3 bg-gradient-to-r from-gray-50/80 to-blue-50/80 border-b border-white/50" aria-hidden="true">
               <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                 <IoTrendingUp className="w-4 h-4 text-blue-500" />
                 Popular Destinations
@@ -104,12 +120,14 @@ export function LocationSearch({ placeholder = 'Search destinations...', classNa
             {filteredSuggestions.map((location, index) => (
               <button
                 key={location}
+                role="option"
+                aria-selected="false"
                 onClick={() => handleSuggestionClick(location)}
-                className="w-full px-6 py-4 text-left hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-purple-50/50 flex items-center gap-4 transition-all group border-b border-white/30 last:border-0"
+                className="w-full px-6 py-4 text-left hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-purple-50/50 flex items-center gap-4 transition-all group border-b border-white/30 last:border-0 focus:outline-none focus:bg-blue-50/50"
                 type="button"
                 style={{ animationDelay: `${index * 0.03}s` }}
               >
-                <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 group-hover:from-blue-500/20 group-hover:to-purple-500/20 transition-all">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 group-hover:from-blue-500/20 group-hover:to-purple-500/20 transition-all" aria-hidden="true">
                   <IoLocationSharp className="w-4 h-4 text-blue-600" />
                 </div>
                 <span className="text-gray-800 font-medium group-hover:text-blue-900 transition-colors">

@@ -81,7 +81,7 @@ export function WeatherCard({ location }: WeatherCardProps) {
 
   if (isLoading) {
     return (
-      <div className={styles.loadingCard}>
+      <div className={styles.loadingCard} role="status" aria-label={`Loading weather data for ${location}`}>
         <div className={styles.loadingContainer}>
           <div className={styles.loadingSkeleton}></div>
           <div className={styles.loadingContent}>
@@ -94,19 +94,20 @@ export function WeatherCard({ location }: WeatherCardProps) {
             </div>
           </div>
         </div>
+        <span className="sr-only">Loading weather data for {location}</span>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className={styles.errorCard}>
+      <div className={styles.errorCard} role="alert" aria-live="polite">
         <div className={styles.errorHeader}>
           <h2 className={styles.errorTitle}>{location}</h2>
           <button
             onClick={() => removeLocation(location)}
             className={styles.removeButton}
-            aria-label="Remove location"
+            aria-label={`Remove ${location} from comparison`}
           >
             <IoClose size={20} />
           </button>
@@ -144,19 +145,24 @@ export function WeatherCard({ location }: WeatherCardProps) {
     : { background: getLocationGradient(location) };
 
   return (
-    <div ref={cardRef} className={styles.weatherCard}>
+    <article
+      ref={cardRef}
+      className={styles.weatherCard}
+      aria-label={`Weather information for ${cityName}`}
+    >
       <div className={styles.cardContainer}>
         {/* Left Side - Location Image */}
-        <div className={styles.imagePanel}>
+        <div className={styles.imagePanel} role="img" aria-label={`Background image of ${cityName}`}>
           <div
             className={styles.imageBackground}
             style={backgroundStyle}
+            aria-hidden="true"
           />
-          <div className={styles.imageOverlay} />
+          <div className={styles.imageOverlay} aria-hidden="true" />
 
-          <div className={styles.locationInfo}>
+          <header className={styles.locationInfo}>
             <div className={styles.locationHeader}>
-              <IoLocationSharp className={styles.locationIcon} />
+              <IoLocationSharp className={styles.locationIcon} aria-hidden="true" />
               <div>
                 <h2 className={styles.cityName}>
                   {cityName}
@@ -167,28 +173,27 @@ export function WeatherCard({ location }: WeatherCardProps) {
               </div>
             </div>
             {isOffline && (
-              <div className={styles.offlineBadge}>
-                <IoStar size={12} />
+              <div className={styles.offlineBadge} role="status" aria-label="This location is saved for offline viewing">
+                <IoStar size={12} aria-hidden="true" />
                 <span>Saved for Offline</span>
               </div>
             )}
-          </div>
+          </header>
 
           {/* Action Buttons */}
-          <div className={styles.actionButtons}>
+          <div className={styles.actionButtons} role="group" aria-label="Location actions">
             <button
               onClick={handleOfflineToggle}
               className={`${styles.actionButton} ${isOffline ? styles.offlineActive : ''}`}
-              aria-label={isOffline ? 'Remove from offline' : 'Save for offline'}
-              title={isOffline ? 'Saved for offline' : 'Save for offline'}
+              aria-label={isOffline ? `Remove ${cityName} from offline storage` : `Save ${cityName} for offline viewing`}
+              aria-pressed={isOffline}
             >
               {isOffline ? <IoStar size={20} /> : <IoStarOutline size={20} />}
             </button>
             <button
               onClick={() => removeLocation(location)}
               className={styles.actionButton}
-              aria-label="Remove location"
-              title="Remove location"
+              aria-label={`Remove ${cityName} from weather comparison`}
             >
               <IoClose size={20} />
             </button>
@@ -201,8 +206,9 @@ export function WeatherCard({ location }: WeatherCardProps) {
             {/* Temperature */}
             <div className={styles.temperatureSection}>
               <div>
-                <div className={styles.temperatureMain}>
+                <div className={styles.temperatureMain} aria-label={`Current temperature ${temp} degrees ${temperatureUnit === 'celsius' ? 'Celsius' : 'Fahrenheit'}`}>
                   {temp}°
+                  <span className="sr-only">{temperatureUnit === 'celsius' ? 'Celsius' : 'Fahrenheit'}</span>
                 </div>
                 <p className={styles.feelsLike}>
                   Feels like {feelsLike}{tempSymbol}
@@ -211,7 +217,7 @@ export function WeatherCard({ location }: WeatherCardProps) {
               <div className={styles.weatherIcon}>
                 <img
                   src={getWeatherIconUrl(currentConditions.icon)}
-                  alt={currentConditions.conditions}
+                  alt={`Weather icon showing ${currentConditions.conditions}`}
                 />
                 <p className={styles.conditionText}>
                   {currentConditions.conditions}
@@ -255,19 +261,19 @@ export function WeatherCard({ location }: WeatherCardProps) {
           </div>
 
           {/* 7-Day Forecast */}
-          <div className={styles.forecastSection}>
-            <h3 className={styles.forecastTitle}>
+          <section className={styles.forecastSection} aria-labelledby="forecast-heading">
+            <h3 id="forecast-heading" className={styles.forecastTitle}>
               7-Day Forecast
             </h3>
-            <div className={styles.forecastList}>
+            <div className={styles.forecastList} role="list">
               {forecast.slice(0, 5).map((day: WeatherDay) => (
                 <ForecastDay key={day.datetime} day={day} temperatureUnit={temperatureUnit} />
               ))}
             </div>
-          </div>
+          </section>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
 
@@ -279,12 +285,13 @@ interface MetricItemProps {
 
 function MetricItem({ icon, label, value }: MetricItemProps) {
   return (
-    <div className={styles.metricItem}>
-      <div className={styles.metricIcon}>
+    <div className={styles.metricItem} role="group" aria-label={`${label}: ${value}`}>
+      <div className={styles.metricIcon} aria-hidden="true">
         {icon}
       </div>
-      <div className={styles.metricValue}>{value}</div>
-      <div className={styles.metricLabel}>{label}</div>
+      <div className={styles.metricValue} aria-hidden="true">{value}</div>
+      <div className={styles.metricLabel} aria-hidden="true">{label}</div>
+      <span className="sr-only">{label}: {value}</span>
     </div>
   );
 }
@@ -297,21 +304,28 @@ interface ForecastDayProps {
 function ForecastDay({ day, temperatureUnit }: ForecastDayProps) {
   const date = new Date(day.datetime);
   const dayName = format(date, 'EEE');
+  const fullDate = format(date, 'EEEE, MMMM d');
   const tempMax = convertTemperature(day.tempmax, temperatureUnit);
   const tempMin = convertTemperature(day.tempmin, temperatureUnit);
+  const tempUnit = temperatureUnit === 'celsius' ? 'Celsius' : 'Fahrenheit';
 
   return (
-    <div className={styles.forecastDay}>
+    <div
+      className={styles.forecastDay}
+      role="listitem"
+      aria-label={`${fullDate}: ${day.conditions}, high ${tempMax} degrees, low ${tempMin} degrees ${tempUnit}`}
+    >
       <div className={styles.forecastLeft}>
-        <div className={styles.dayName}>{dayName}</div>
+        <div className={styles.dayName} aria-hidden="true">{dayName}</div>
         <img
           src={getWeatherIconUrl(day.icon)}
-          alt={day.conditions}
+          alt=""
           className={styles.forecastIcon}
+          aria-hidden="true"
         />
-        <div className={styles.forecastCondition}>{day.conditions}</div>
+        <div className={styles.forecastCondition} aria-hidden="true">{day.conditions}</div>
       </div>
-      <div className={styles.forecastTemps}>
+      <div className={styles.forecastTemps} aria-hidden="true">
         <span className={styles.tempMax}>{tempMax}°</span>
         <span className={styles.tempSeparator}>/</span>
         <span className={styles.tempMin}>{tempMin}°</span>

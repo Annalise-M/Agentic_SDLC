@@ -46,8 +46,16 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+      {/* Skip to main content link for keyboard users */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-6 focus:py-3 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      >
+        Skip to main content
+      </a>
+
       {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute top-20 left-20 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
         <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '1s' }}></div>
       </div>
@@ -79,13 +87,13 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-2xl shadow-lg shadow-blue-500/20">
+              <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-2xl shadow-lg shadow-blue-500/20" aria-hidden="true">
                 <IoCloudSharp className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
+                <div className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
                   WeatherWise
-                </h1>
+                </div>
                 <p className="text-sm text-gray-600 mt-1 font-medium">
                   Smart travel planning starts here
                 </p>
@@ -95,13 +103,14 @@ function App() {
             {/* Temperature Unit Toggle */}
             <button
               onClick={toggleTemperatureUnit}
-              className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200"
-              aria-label="Toggle temperature unit"
+              className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              aria-label={`Switch to ${temperatureUnit === 'celsius' ? 'Fahrenheit' : 'Celsius'}`}
+              aria-pressed="false"
             >
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-gray-700" aria-hidden="true">
                 {temperatureUnit === 'celsius' ? '°C' : '°F'}
               </span>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-500" aria-hidden="true">
                 {temperatureUnit === 'celsius' ? 'Celsius' : 'Fahrenheit'}
               </span>
             </button>
@@ -110,16 +119,16 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main id="main-content" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section with Search */}
-        <div className="mb-16 text-center animate-fade-in">
-          <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
+        <section className="mb-16 text-center animate-fade-in" aria-labelledby="hero-heading">
+          <h1 id="hero-heading" className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
             Compare weather,
             <br />
             <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
               plan smarter trips
             </span>
-          </h2>
+          </h1>
           <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
             Side-by-side weather comparison for up to 5 destinations. Make confident decisions about where to go.
           </p>
@@ -128,14 +137,14 @@ function App() {
           <div className="max-w-2xl mx-auto">
             <LocationSearch />
             {locations.length > 0 && (
-              <p className="text-sm text-gray-500 mt-4 font-medium">
+              <p className="text-sm text-gray-500 mt-4 font-medium" role="status" aria-live="polite">
                 <span className="inline-flex items-center gap-2 px-3 py-1 bg-white/80 backdrop-blur-sm rounded-full border border-gray-200">
                   {locations.length} of 5 locations
                 </span>
               </p>
             )}
           </div>
-        </div>
+        </section>
 
         {/* Weather Comparison Grid */}
         {locations.length === 0 ? (
@@ -170,8 +179,8 @@ function App() {
             )}
           </div>
         ) : (
-          <div className="carousel-container">
-            <div className="carousel-track">
+          <section aria-label="Weather comparison cards" className="carousel-container" tabIndex={0}>
+            <div className="carousel-track" role="group">
               {locations.map((location, index) => (
                 <div
                   key={location}
@@ -182,7 +191,10 @@ function App() {
                 </div>
               ))}
             </div>
-          </div>
+            <div className="sr-only" aria-live="polite">
+              Use arrow keys or swipe to navigate between {locations.length} weather cards
+            </div>
+          </section>
         )}
 
         {/* Tip Card */}
