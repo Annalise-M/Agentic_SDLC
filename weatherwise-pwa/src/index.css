@@ -2,49 +2,102 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Horizontal Carousel for Weather Cards */
+/* Horizontal Carousel for Weather Cards - Mobile First */
 .carousel-container {
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
-  padding: 2rem 0;
+  scroll-snap-type: x mandatory;
 
-  /* Hide scrollbar but keep functionality */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(59, 130, 246, 0.5) transparent;
+  /* Mobile: no padding, edge-to-edge */
+  padding: 0;
+
+  /* Hide scrollbar on mobile for clean edge-to-edge look */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .carousel-container::-webkit-scrollbar {
-  height: 8px;
+  display: none;
 }
 
-.carousel-container::-webkit-scrollbar-track {
-  background: transparent;
-}
+/* Desktop: show subtle scrollbar */
+@media (min-width: 1024px) {
+  .carousel-container {
+    padding: 2rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(59, 130, 246, 0.5) transparent;
+  }
 
-.carousel-container::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.3);
-  border-radius: 4px;
-}
+  .carousel-container::-webkit-scrollbar {
+    display: block;
+    height: 8px;
+  }
 
-.carousel-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.5);
+  .carousel-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .carousel-container::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.3);
+    border-radius: 4px;
+  }
+
+  .carousel-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.5);
+  }
 }
 
 .carousel-track {
   display: flex;
-  gap: 2rem;
-  padding: 0 max(2rem, calc(50vw - 600px));
   min-width: min-content;
+
+  /* Mobile: edge-to-edge, no gap */
+  gap: 0;
+  padding: 0;
+}
+
+/* Tablet: show peek of next card */
+@media (min-width: 768px) {
+  .carousel-track {
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+}
+
+/* Desktop: centered with larger gaps */
+@media (min-width: 1024px) {
+  .carousel-track {
+    gap: 2rem;
+    padding: 0 max(2rem, calc(50vw - 600px));
+  }
 }
 
 .carousel-item {
-  flex: 0 0 min(90vw, 500px);
   scroll-snap-align: center;
+  scroll-snap-stop: always;
   animation: slideInCarousel 0.6s ease-out forwards;
   opacity: 0;
+
+  /* Mobile: full width, edge-to-edge */
+  flex: 0 0 100vw;
+}
+
+/* Tablet: show 1.5-2 cards (peek design) */
+@media (min-width: 768px) {
+  .carousel-item {
+    flex: 0 0 calc(100vw - 8rem);
+    max-width: 600px;
+  }
+}
+
+/* Desktop: constrained width, centered */
+@media (min-width: 1024px) {
+  .carousel-item {
+    flex: 0 0 min(90vw, 500px);
+  }
 }
 
 @keyframes slideInCarousel {
@@ -58,7 +111,13 @@
   }
 }
 
-/* Single card should be centered */
+/* Single card centering */
 .carousel-track:has(.carousel-item:only-child) {
   justify-content: center;
+}
+
+@media (max-width: 767px) {
+  .carousel-track:has(.carousel-item:only-child) {
+    justify-content: flex-start;
+  }
 }
