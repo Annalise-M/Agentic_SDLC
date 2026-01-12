@@ -1,5 +1,6 @@
 import { IoClose, IoWater, IoEye, IoSpeedometer, IoSunny, IoLocationSharp, IoStar, IoStarOutline } from 'react-icons/io5';
 import { WiStrongWind } from 'react-icons/wi';
+import { FaPlane, FaHotel } from 'react-icons/fa';
 import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
@@ -8,6 +9,7 @@ import { useLocationStore } from '../../store/locations-store';
 import { getWeatherIconUrl } from '../../lib/api/weather';
 import { getLocationImageAsync, getLocationGradient } from '../../lib/api/unsplash';
 import { convertTemperature, getTemperatureSymbol } from '../../lib/utils/temperature';
+import { buildSkyscannerLink, buildBookingLink } from '../../lib/utils/affiliate-links';
 import { db } from '../../lib/db/indexed-db';
 import type { WeatherDay } from '../../types/weather';
 import styles from './WeatherCard.module.scss';
@@ -269,6 +271,39 @@ export function WeatherCard({ location }: WeatherCardProps) {
               {forecast.slice(0, 5).map((day: WeatherDay) => (
                 <ForecastDay key={day.datetime} day={day} temperatureUnit={temperatureUnit} />
               ))}
+            </div>
+          </section>
+
+          {/* Travel Booking Options */}
+          <section className={styles.bookingActions} aria-label="Travel booking options">
+            <h3 className="sr-only">Book Travel to {cityName}</h3>
+            <div className={styles.bookingButtons}>
+              <a
+                href={buildSkyscannerLink(cityName)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.bookingButton}
+                aria-label={`Search flights to ${cityName} on Skyscanner`}
+              >
+                <FaPlane className={styles.bookingIcon} aria-hidden="true" />
+                <span className={styles.bookingText}>
+                  <span className={styles.bookingLabel}>Find Flights</span>
+                  <span className={styles.bookingProvider}>via Skyscanner</span>
+                </span>
+              </a>
+              <a
+                href={buildBookingLink(cityName)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.bookingButton}
+                aria-label={`Search hotels in ${cityName} on Booking.com`}
+              >
+                <FaHotel className={styles.bookingIcon} aria-hidden="true" />
+                <span className={styles.bookingText}>
+                  <span className={styles.bookingLabel}>Find Hotels</span>
+                  <span className={styles.bookingProvider}>via Booking.com</span>
+                </span>
+              </a>
             </div>
           </section>
         </div>

@@ -263,15 +263,27 @@ Output will be in the `dist/` directory, ready for deployment.
 
 ## 🌐 Deployment
 
-The app can be deployed to:
+### Quick Deploy to Netlify (Recommended)
+
+1. Push your code to GitHub/GitLab/Bitbucket
+2. Go to https://app.netlify.com/
+3. Click "Add new site" → "Import an existing project"
+4. Select your repository
+5. Add environment variables (see below)
+6. Deploy!
+
+**See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.**
+
+The app can also be deployed to:
 - **Vercel**: `vercel deploy`
-- **Netlify**: Drag and drop `dist/` folder
 - **GitHub Pages**: Use GitHub Actions workflow
 - Any static hosting service
 
 **Important**: Set environment variables in your hosting platform:
 - `VITE_VISUAL_CROSSING_API_KEY` (required)
 - `VITE_PEXELS_API_KEY` (optional)
+- `VITE_SKYSCANNER_AFFILIATE_ID` (optional - for monetization)
+- `VITE_BOOKING_AFFILIATE_ID` (optional - for monetization)
 
 ## 🔧 Troubleshooting
 
