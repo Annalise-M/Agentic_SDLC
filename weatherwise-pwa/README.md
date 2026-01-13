@@ -7,9 +7,11 @@ A sleek, magazine-style Progressive Web App for comparing weather across multipl
 ### Widget Dashboard System
 - **Modular Widget Architecture**: Customize your travel dashboard with optional widgets
 - **Widget Marketplace**: Browse and enable widgets from an organized catalog
+- **Drag and Drop Reordering**: Drag widgets to rearrange your dashboard layout with GSAP animations
 - **Flexible Layouts**: Choose between Grid, Sidebar, or Minimal layout styles
-- **Persistent Configuration**: Widget preferences saved to localStorage
+- **Persistent Configuration**: Widget preferences and order saved to localStorage
 - **Easy Enable/Disable**: Toggle widgets on and off without losing data
+- **Responsive Design**: Compact, mobile-friendly widgets that scale beautifully
 
 ### Core Weather Features
 - **Multi-Location Weather Comparison**: Compare weather conditions for up to 5 locations side-by-side in a beautiful horizontal carousel
@@ -240,9 +242,12 @@ The application will open at `http://localhost:3000`
    - **Enable Widgets**: Click the "+" button to add widgets to your dashboard
    - **Disable Widgets**: Click the checkmark button to remove widgets (core weather widget cannot be removed)
    - **Change Layout**: Select Grid, Sidebar, or Minimal layout from marketplace
+   - **Drag to Reorder**: Drag any widget by its drag handle (6 dots on left) to reorder your dashboard
+   - **Smooth Animations**: Watch widgets animate as you drag and snap back to grid positions
    - **Flight Search**: Enable flight widget, select destination, click "Search Flights"
    - **Hotel Search**: Enable hotel widget, select destination, click "Search Hotels"
    - **Widget Controls**: Hover over widgets to see remove/configure controls (always visible on mobile)
+   - **Responsive Sizing**: Widgets are compact and mobile-friendly, scaling beautifully across devices
 
 ### Features to Verify
 
@@ -285,10 +290,17 @@ The application will open at `http://localhost:3000`
 - [x] Disable widget button removes widget from dashboard
 - [x] Core weather widget cannot be disabled
 - [x] Widget preferences persist in localStorage
+- [x] Drag and drop widget reordering with GSAP
+- [x] Visual feedback during drag (scale, shadow, opacity)
+- [x] Smooth snap-back animation after drag
+- [x] Drag handle (6 dots) appears on hover
+- [x] Widget order persists in localStorage
 - [x] Flight search widget displays and opens Skyscanner
 - [x] Hotel search widget displays and opens Booking.com
 - [x] Widget controls (remove button) appear on hover
 - [x] Coming soon placeholder for unimplemented widgets
+- [x] Compact, responsive widget sizing for mobile/tablet/desktop
+- [x] Touch-friendly interactions on mobile devices
 
 ## 📊 API Usage and Rate Limits
 
@@ -403,16 +415,25 @@ The app can also be deployed to:
 - [x] Auto-update service worker
 - [x] Lighthouse scores: Performance 96/100, Accessibility 100/100, Best Practices 96/100, SEO 91/100
 
-### 🔄 Phase 5: Widget Dashboard System (IN PROGRESS)
+### ✅ Phase 5: Widget Dashboard System (COMPLETE)
 - [x] Modular widget architecture with Zustand store
 - [x] Widget marketplace UI with category filtering
 - [x] Layout system (Grid, Sidebar, Minimal)
 - [x] Enable/disable widget functionality
 - [x] Persistent widget configuration (localStorage)
+- [x] GSAP drag and drop widget reordering
+- [x] Smooth animations for drag interactions
+- [x] Responsive, compact widget sizing
 - [x] Flight search widget (Skyscanner affiliate)
 - [x] Hotel search widget (Booking.com affiliate)
 - [x] Widget wrapper with controls (remove, configure)
-- [ ] Additional widgets: Packing List, Trip Calendar, Budget Tracker, Currency Converter
+- [x] Drag handle with visual feedback
+
+### 🚀 Phase 5b: Additional Widgets (PLANNED)
+- [ ] Packing List widget (weather-based recommendations)
+- [ ] Trip Calendar widget (travel dates and countdown)
+- [ ] Budget Tracker widget (expense tracking)
+- [ ] Currency Converter widget (real-time exchange rates)
 - [ ] Language learning widget (Duolingo integration)
 - [ ] Travel insurance widget (SafetyWing/World Nomads)
 
@@ -457,5 +478,5 @@ MIT
 
 ---
 
-**Current Status**: Phase 5 In Progress - Widget Dashboard System Implemented! | Next: Additional Widgets
+**Current Status**: Phase 5 Complete - Widget Dashboard with Drag & Drop! | Next: Additional Widgets (Phase 5b)
 **Last Updated**: January 12, 2026

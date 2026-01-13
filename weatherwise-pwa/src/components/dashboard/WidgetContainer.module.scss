@@ -4,26 +4,42 @@
 
 .widgetContainer {
   width: 100%;
-  padding: 1rem;
+  padding: 0.5rem;
+  position: relative;
 
   @media (min-width: 768px) {
-    padding: 1.5rem;
+    padding: 1rem;
   }
 
   @media (min-width: 1024px) {
-    padding: 2rem;
+    padding: 1.5rem;
   }
 }
 
 // Grid layout
 .layout-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  grid-auto-rows: minmax(200px, auto);
+  grid-auto-flow: dense;
 
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(var(--grid-columns, 2), 1fr);
-    gap: 2rem;
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    grid-auto-rows: minmax(220px, auto);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    grid-auto-rows: minmax(240px, auto);
+  }
+
+  @media (min-width: 1400px) {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.25rem;
+    grid-auto-rows: minmax(250px, auto);
   }
 }
 
@@ -59,9 +75,15 @@
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-radius: 12px;
+  padding: 0.75rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: grab;
+  touch-action: none;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  max-height: 300px;
 
   &:hover {
     background: rgba(255, 255, 255, 0.08);
@@ -72,18 +94,105 @@
     .widgetControls {
       opacity: 1;
     }
+
+    .dragHandle {
+      opacity: 1;
+    }
   }
 
-  @media (min-width: 768px) {
-    padding: 2rem;
-    border-radius: 20px;
+  &.dragging {
+    cursor: grabbing;
+    opacity: 0.95;
+    z-index: 1000;
+  }
+
+  @media (min-width: 640px) {
+    padding: 0.875rem;
+    min-height: 220px;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 1rem;
+    border-radius: 14px;
+    min-height: 240px;
+  }
+
+  // Weather widget gets special treatment - spans full width
+  &[data-widget-id="weather-main"] {
+    grid-column: 1 / -1;
+    min-height: auto;
+    max-height: none;
+    padding: 0;
+    overflow: visible;
+    background: transparent;
+    border: none;
+    backdrop-filter: none;
+    cursor: default;
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+      background: transparent;
+      border: none;
+    }
+
+    .widgetControls {
+      display: none;
+    }
+
+    .dragHandle {
+      display: none;
+    }
+
+    .widgetContent {
+      overflow: visible;
+    }
+  }
+}
+
+// Drag Handle
+.dragHandle {
+  position: absolute;
+  top: 50%;
+  left: 0.5rem;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+  cursor: grab;
+  padding: 0.5rem;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  @media (max-width: 767px) {
+    opacity: 0.5; // Slightly visible on mobile
+  }
+}
+
+.dragDots {
+  display: grid;
+  grid-template-columns: repeat(2, 4px);
+  gap: 4px;
+
+  span {
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transition: background 0.2s ease;
+  }
+
+  &:hover span {
+    background: rgba(255, 255, 255, 0.7);
   }
 }
 
 .widgetControls {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 0.75rem;
+  right: 0.75rem;
   display: flex;
   gap: 0.5rem;
   opacity: 0;
@@ -92,6 +201,11 @@
 
   @media (max-width: 767px) {
     opacity: 1; // Always visible on mobile
+  }
+
+  @media (min-width: 768px) {
+    top: 1rem;
+    right: 1rem;
   }
 }
 
@@ -123,6 +237,10 @@
 
 .widgetContent {
   width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 // ============================================
