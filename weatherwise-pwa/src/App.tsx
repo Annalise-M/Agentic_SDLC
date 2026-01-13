@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { IoCloudSharp, IoLocationSharp, IoSparkles } from 'react-icons/io5';
+import { useEffect } from 'react';
+import { IoCloudSharp, IoSparkles } from 'react-icons/io5';
 import { LocationSearch } from './components/search/LocationSearch';
-import { WeatherCard } from './components/weather/WeatherCard';
+import { Dashboard } from './components/dashboard/Dashboard';
 import { InstallPrompt } from './components/pwa/InstallPrompt';
 import { useLocationStore } from './store/locations-store';
 import { useGeolocation, reverseGeocode } from './lib/hooks/useGeolocation';
@@ -9,7 +9,6 @@ import { useGeolocation, reverseGeocode } from './lib/hooks/useGeolocation';
 function App() {
   const { locations, addLocation, temperatureUnit, toggleTemperatureUnit } = useLocationStore();
   const geolocation = useGeolocation();
-  const [isDetectingLocation, setIsDetectingLocation] = useState(false);
 
   // Version check - if you see this in console, the new code has loaded!
   console.log('🎨 Magazine layout version loaded - Jan 9, 2026 1:21 PM');
@@ -28,8 +27,6 @@ function App() {
       geolocation.longitude &&
       !geolocation.loading
     ) {
-      setIsDetectingLocation(true);
-
       reverseGeocode(geolocation.latitude, geolocation.longitude)
         .then((locationName) => {
           addLocation(locationName);
@@ -37,9 +34,6 @@ function App() {
         })
         .catch((error) => {
           console.error('Failed to add current location:', error);
-        })
-        .finally(() => {
-          setIsDetectingLocation(false);
         });
     }
   }, [geolocation, locations.length, addLocation]);
@@ -146,77 +140,8 @@ function App() {
           </div>
         </section>
 
-        {/* Weather Comparison Grid */}
-        {locations.length === 0 ? (
-          <div className="text-center py-24 animate-slide-up">
-            {isDetectingLocation || geolocation.loading ? (
-              <div className="inline-flex flex-col items-center gap-4 px-8 py-12 bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200/50 shadow-xl shadow-blue-500/5">
-                <div className="relative">
-                  <IoLocationSharp className="w-16 h-16 text-blue-500 animate-pulse" />
-                  <div className="absolute inset-0 bg-blue-500 rounded-full blur-xl opacity-20 animate-pulse"></div>
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    Finding your location...
-                  </h3>
-                  <p className="text-gray-600">
-                    We'll show you local weather in a moment
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="inline-flex flex-col items-center gap-4 px-8 py-12 bg-white/60 backdrop-blur-sm rounded-3xl border border-dashed border-gray-300">
-                <IoCloudSharp className="w-16 h-16 text-gray-300" />
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-600 mb-2">
-                    Ready to compare
-                  </h3>
-                  <p className="text-gray-500">
-                    Search for your first destination above
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        ) : (
-          <section aria-label="Weather comparison cards" className="carousel-container" tabIndex={0}>
-            <div className="carousel-track" role="group">
-              {locations.map((location, index) => (
-                <div
-                  key={location}
-                  className="carousel-item"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <WeatherCard location={location} />
-                </div>
-              ))}
-            </div>
-            <div className="sr-only" aria-live="polite">
-              Use arrow keys or swipe to navigate between {locations.length} weather cards
-            </div>
-          </section>
-        )}
-
-        {/* Tip Card */}
-        {locations.length > 0 && locations.length < 2 && (
-          <div className="mt-12 max-w-2xl mx-auto animate-fade-in">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-2xl p-6 backdrop-blur-sm">
-              <div className="flex items-start gap-4">
-                <div className="bg-blue-500 p-2 rounded-xl">
-                  <IoSparkles className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-1">
-                    Add more locations
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    Compare weather side-by-side to make the best decision for your trip
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Widget Dashboard */}
+        <Dashboard />
       </main>
 
       {/* Footer */}

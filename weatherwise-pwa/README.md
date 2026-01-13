@@ -4,12 +4,25 @@ A sleek, magazine-style Progressive Web App for comparing weather across multipl
 
 ## ✨ Features
 
+### Widget Dashboard System
+- **Modular Widget Architecture**: Customize your travel dashboard with optional widgets
+- **Widget Marketplace**: Browse and enable widgets from an organized catalog
+- **Flexible Layouts**: Choose between Grid, Sidebar, or Minimal layout styles
+- **Persistent Configuration**: Widget preferences saved to localStorage
+- **Easy Enable/Disable**: Toggle widgets on and off without losing data
+
 ### Core Weather Features
 - **Multi-Location Weather Comparison**: Compare weather conditions for up to 5 locations side-by-side in a beautiful horizontal carousel
 - **7-Day Forecast**: View detailed weather forecasts for the next week
 - **Current Conditions**: Real-time weather data including temperature, humidity, wind speed, UV index, visibility, and pressure
 - **Temperature Unit Toggle**: Switch between Fahrenheit and Celsius with persistent user preference
 - **Visual Weather Icons**: Beautiful weather icons from Visual Crossing API
+
+### Travel Booking Widgets (Optional)
+- **Flight Search Widget**: Search for flights to your destinations via Skyscanner
+- **Hotel Search Widget**: Find and book hotels via Booking.com
+- **Affiliate Integration**: Support WeatherWise through affiliate commissions
+- **Smart Destination Sync**: Booking widgets sync with your saved locations
 
 ### Design & UX
 - **Magazine-Style Layout**: Premium horizontal carousel design with full-background location cards
@@ -66,18 +79,32 @@ A sleek, magazine-style Progressive Web App for comparing weather across multipl
 weatherwise-pwa/
 ├── src/
 │   ├── components/
+│   │   ├── dashboard/
+│   │   │   ├── Dashboard.tsx                # Main dashboard component
+│   │   │   ├── WidgetContainer.tsx          # Widget layout container
+│   │   │   ├── WidgetContainer.module.scss  # Widget container styles
+│   │   │   ├── WidgetRenderer.tsx           # Widget type-to-component mapper
+│   │   │   ├── WidgetMarketplace.tsx        # Widget marketplace modal
+│   │   │   └── WidgetMarketplace.module.scss # Marketplace styles
 │   │   ├── pwa/
 │   │   │   ├── InstallPrompt.tsx            # Custom install prompt component
 │   │   │   └── InstallPrompt.module.scss    # Install prompt styling
 │   │   ├── search/
 │   │   │   └── LocationSearch.tsx           # Location search with autocomplete
-│   │   └── weather/
-│   │       ├── WeatherCard.tsx              # Magazine-style weather card
-│   │       └── WeatherCard.module.scss      # SCSS styling
+│   │   ├── weather/
+│   │   │   ├── WeatherCard.tsx              # Magazine-style weather card
+│   │   │   ├── WeatherCard.module.scss      # SCSS styling
+│   │   │   └── WeatherComparison.tsx        # Weather comparison widget
+│   │   └── widgets/
+│   │       ├── FlightSearchWidget.tsx       # Skyscanner flight search
+│   │       ├── HotelSearchWidget.tsx        # Booking.com hotel search
+│   │       └── BookingWidgets.module.scss   # Shared booking widget styles
 │   ├── lib/
 │   │   ├── api/
 │   │   │   ├── weather.ts                   # Visual Crossing API client
 │   │   │   └── unsplash.ts                  # Pexels image API client
+│   │   ├── config/
+│   │   │   └── affiliate.ts                 # Affiliate configuration
 │   │   ├── data/
 │   │   │   └── mock-weather.ts              # Demo mode fallback data
 │   │   ├── db/
@@ -85,12 +112,17 @@ weatherwise-pwa/
 │   │   ├── hooks/
 │   │   │   ├── useWeather.ts                # React Query hook for weather
 │   │   │   └── useGeolocation.ts            # Auto-location detection hook
-│   │   └── utils/
-│   │       └── temperature.ts               # F/C conversion utilities
+│   │   ├── utils/
+│   │   │   ├── temperature.ts               # F/C conversion utilities
+│   │   │   └── affiliate-links.ts           # Affiliate URL builders
+│   │   └── widgets/
+│   │       └── widget-catalog.ts            # Widget marketplace catalog
 │   ├── store/
-│   │   └── locations-store.ts               # Zustand store (locations + offline)
+│   │   ├── locations-store.ts               # Zustand store (locations + offline)
+│   │   └── widget-store.ts                  # Zustand store (widgets + layouts)
 │   ├── types/
-│   │   └── weather.ts                       # TypeScript interfaces
+│   │   ├── weather.ts                       # TypeScript interfaces
+│   │   └── widgets.ts                       # Widget type definitions
 │   ├── App.tsx                              # Main application component
 │   ├── main.tsx                             # Application entry point
 │   └── index.css                            # Global styles + carousel CSS
@@ -202,6 +234,16 @@ The application will open at `http://localhost:3000`
    - **Offline Mode**: Turn off network, app still works for starred locations
    - **Star Indicator**: Starred locations show a golden filled star icon
 
+8. **Test Widget Dashboard**
+   - **Customize Widgets**: Click "Customize Widgets" button to open marketplace
+   - **Browse Categories**: Filter widgets by All, Weather, Booking, Planning, Finance, Learning
+   - **Enable Widgets**: Click the "+" button to add widgets to your dashboard
+   - **Disable Widgets**: Click the checkmark button to remove widgets (core weather widget cannot be removed)
+   - **Change Layout**: Select Grid, Sidebar, or Minimal layout from marketplace
+   - **Flight Search**: Enable flight widget, select destination, click "Search Flights"
+   - **Hotel Search**: Enable hotel widget, select destination, click "Search Hotels"
+   - **Widget Controls**: Hover over widgets to see remove/configure controls (always visible on mobile)
+
 ### Features to Verify
 
 #### Core Features
@@ -233,6 +275,20 @@ The application will open at `http://localhost:3000`
 - [x] Service worker caches API responses and images
 - [x] App works offline for starred locations
 - [x] Lighthouse PWA score: Performance 96/100, Accessibility 100/100
+
+#### Widget Dashboard Features
+- [x] "Customize Widgets" button opens marketplace modal
+- [x] Widget marketplace displays with categories
+- [x] Category filtering works (All, Weather, Booking, Planning, Finance, Learning)
+- [x] Layout selector (Grid, Sidebar, Minimal) changes dashboard layout
+- [x] Enable widget button adds widget to dashboard
+- [x] Disable widget button removes widget from dashboard
+- [x] Core weather widget cannot be disabled
+- [x] Widget preferences persist in localStorage
+- [x] Flight search widget displays and opens Skyscanner
+- [x] Hotel search widget displays and opens Booking.com
+- [x] Widget controls (remove button) appear on hover
+- [x] Coming soon placeholder for unimplemented widgets
 
 ## 📊 API Usage and Rate Limits
 
@@ -347,11 +403,18 @@ The app can also be deployed to:
 - [x] Auto-update service worker
 - [x] Lighthouse scores: Performance 96/100, Accessibility 100/100, Best Practices 96/100, SEO 91/100
 
-### 💰 Phase 5: Monetization
-- [ ] Flight search affiliate integration (Skyscanner)
-- [ ] Hotel booking affiliate integration (Booking.com)
-- [ ] Travel insurance affiliate (SafetyWing/World Nomads)
-- [ ] Language learning integration with progress tracking
+### 🔄 Phase 5: Widget Dashboard System (IN PROGRESS)
+- [x] Modular widget architecture with Zustand store
+- [x] Widget marketplace UI with category filtering
+- [x] Layout system (Grid, Sidebar, Minimal)
+- [x] Enable/disable widget functionality
+- [x] Persistent widget configuration (localStorage)
+- [x] Flight search widget (Skyscanner affiliate)
+- [x] Hotel search widget (Booking.com affiliate)
+- [x] Widget wrapper with controls (remove, configure)
+- [ ] Additional widgets: Packing List, Trip Calendar, Budget Tracker, Currency Converter
+- [ ] Language learning widget (Duolingo integration)
+- [ ] Travel insurance widget (SafetyWing/World Nomads)
 
 ### 🚀 Phase 6: Testing & Launch
 - [ ] Unit tests (Vitest)
@@ -394,5 +457,5 @@ MIT
 
 ---
 
-**Current Status**: Phase 4 Complete - Fully Functional PWA! | Next: Monetization (Phase 5)
-**Last Updated**: January 11, 2026
+**Current Status**: Phase 5 In Progress - Widget Dashboard System Implemented! | Next: Additional Widgets
+**Last Updated**: January 12, 2026
