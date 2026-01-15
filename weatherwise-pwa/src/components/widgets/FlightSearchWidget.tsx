@@ -5,18 +5,28 @@
  * Allows users to search for flights to their selected destinations.
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaPlane } from 'react-icons/fa';
 import { useLocationStore } from '../../store/locations-store';
+import { useUIStore } from '../../store/ui-store';
 import { buildSkyscannerLink } from '../../lib/utils/affiliate-links';
 import type { WidgetProps } from '../../types/widgets';
 import styles from './BookingWidgets.module.scss';
 
 export function FlightSearchWidget({ widget: _widget }: WidgetProps) {
   const { locations } = useLocationStore();
+  const activeLocation = useUIStore((state) => state.activeLocation);
   const [selectedDestination, setSelectedDestination] = useState<string>(
-    locations[0] || ''
+    activeLocation || locations[0] || ''
   );
+
+  // Sync dropdown with active location when it changes
+  useEffect(() => {
+    if (activeLocation) {
+      setSelectedDestination(activeLocation);
+      console.log('✈️ FlightSearchWidget synced to active location:', activeLocation);
+    }
+  }, [activeLocation]);
 
   const handleSearch = () => {
     if (!selectedDestination) return;

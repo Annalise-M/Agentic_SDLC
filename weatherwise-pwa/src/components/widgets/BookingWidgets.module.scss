@@ -17,12 +17,12 @@
   align-items: center;
   gap: 0.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .widgetIcon {
   font-size: 1.5rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
   flex-shrink: 0;
 
   @media (min-width: 1024px) {
@@ -33,7 +33,7 @@
 .widgetTitle {
   font-size: 0.875rem;
   font-weight: 600;
-  color: white;
+  color: var(--text-primary);
   margin: 0;
 
   @media (min-width: 640px) {
@@ -56,7 +56,7 @@
 .selectLabel {
   font-size: 0.6875rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: -0.125rem;
@@ -69,30 +69,34 @@
 .destinationSelect {
   width: 100%;
   padding: 0.5rem 0.75rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
   border-radius: 8px;
-  color: white;
+  color: var(--text-primary);
   font-size: 0.8125rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: var(--shadow-sm);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: var(--bg-tertiary);
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
   }
 
   &:focus {
     outline: none;
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    background: var(--bg-tertiary);
+    border-color: var(--accent-cyan);
+    box-shadow:
+      var(--shadow-md),
+      0 0 0 3px rgba(6, 182, 212, 0.15);
   }
 
   option {
-    background: #1a1a2e;
-    color: white;
+    background: var(--bg-elevated);
+    color: var(--text-primary);
   }
 
   @media (min-width: 640px) {
@@ -105,38 +109,61 @@
 .searchButton {
   width: 100%;
   padding: 0.625rem 1rem;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(147, 51, 234, 0.8));
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   color: white;
   font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.375rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent-pink), var(--accent-yellow));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
 
   &:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(147, 51, 234, 0.9));
+    transform: translateY(-2px) scale(1.02);
+    box-shadow:
+      var(--shadow-lg),
+      0 8px 24px rgba(6, 182, 212, 0.4);
+
+    &::before {
+      opacity: 1;
+    }
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(0) scale(0.98);
+    transition: all 0.1s ease-out;
   }
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    filter: grayscale(0.6);
   }
 
   &:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 3px;
+  }
+
+  span, svg {
+    position: relative;
+    z-index: 1;
   }
 
   @media (min-width: 640px) {

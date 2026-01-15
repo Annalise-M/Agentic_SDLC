@@ -166,6 +166,7 @@ interface WidgetWrapperProps {
   children: React.ReactNode;
   onRemove?: () => void;
   onConfigure?: () => void;
+  onExpand?: () => void;
 }
 
 export function WidgetWrapper({
@@ -173,6 +174,7 @@ export function WidgetWrapper({
   children,
   onRemove,
   onConfigure,
+  onExpand,
 }: WidgetWrapperProps) {
   const { disableWidget } = useWidgetStore();
 
@@ -204,6 +206,16 @@ export function WidgetWrapper({
 
       {/* Widget Controls */}
       <div className={styles.widgetControls}>
+        {onExpand && (
+          <button
+            className={styles.widgetButton}
+            onClick={onExpand}
+            aria-label="Expand widget to fullscreen"
+            title="Expand"
+          >
+            ⛶
+          </button>
+        )}
         {onConfigure && (
           <button
             className={styles.widgetButton}

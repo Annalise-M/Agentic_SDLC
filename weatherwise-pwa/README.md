@@ -167,6 +167,24 @@ npm install
 2. Click "Get Started" and sign up (free, no credit card)
 3. Copy your API key from the dashboard
 
+#### Affiliate IDs (Optional - for monetization)
+
+**Skyscanner Affiliate Program**
+1. Go to [Impact.com Skyscanner Campaign](https://impact.com/ad-campaign/skyscanner.com/)
+2. Sign up for an Impact.com account (free)
+3. Apply to join the Skyscanner affiliate program
+4. Once approved, get your Media Partner ID from the campaign details
+5. Add it to your `.env` file as `VITE_SKYSCANNER_AFFILIATE_ID`
+
+**Booking.com Partner Programme**
+1. Go to [Booking.com Partner Registration](https://admin.booking.com/partner/registration)
+2. Create a Booking.com Partner account
+3. Complete the registration process
+4. Once approved, find your Affiliate ID in the partner dashboard
+5. Add it to your `.env` file as `VITE_BOOKING_AFFILIATE_ID`
+
+**Note**: The flight and hotel booking buttons will work without affiliate IDs - they just won't track commissions. Links will still direct users to Skyscanner and Booking.com with proper destination and date parameters.
+
 ### 4. Configure Environment Variables
 
 1. Copy the example environment file:
@@ -178,6 +196,8 @@ npm install
    ```
    VITE_VISUAL_CROSSING_API_KEY=your_visual_crossing_key_here
    VITE_PEXELS_API_KEY=your_pexels_key_here  # Optional
+   VITE_SKYSCANNER_AFFILIATE_ID=              # Optional - for flight booking commissions
+   VITE_BOOKING_AFFILIATE_ID=                 # Optional - for hotel booking commissions
    ```
 
 ### 5. Run Development Server

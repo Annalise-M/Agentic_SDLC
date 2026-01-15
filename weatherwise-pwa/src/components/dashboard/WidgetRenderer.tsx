@@ -9,18 +9,27 @@ import type { Widget } from '../../types/widgets';
 import { FlightSearchWidget } from '../widgets/FlightSearchWidget';
 import { HotelSearchWidget } from '../widgets/HotelSearchWidget';
 import { WeatherComparison } from '../weather/WeatherComparison';
+import { TemperatureTrendWidget } from '../widgets/TemperatureTrendWidget';
+import { WeatherMetricsWidget } from '../widgets/WeatherMetricsWidget';
 
 interface WidgetRendererProps {
   widget: Widget;
+  isExpanded?: boolean;
 }
 
 /**
  * Renders the appropriate widget component based on widget type
  */
-export function WidgetRenderer({ widget }: WidgetRendererProps) {
+export function WidgetRenderer({ widget, isExpanded = false }: WidgetRendererProps) {
   switch (widget.type) {
     case 'weather-comparison':
       return <WeatherComparison widget={widget} />;
+
+    case 'temperature-trend':
+      return <TemperatureTrendWidget />;
+
+    case 'weather-metrics':
+      return <WeatherMetricsWidget />;
 
     case 'flight-search':
       return <FlightSearchWidget widget={widget} />;

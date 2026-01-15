@@ -1,17 +1,26 @@
-import { useEffect } from 'react';
-import { IoCloudSharp, IoSparkles } from 'react-icons/io5';
+import { useEffect, useState } from 'react';
+import { IoCloudSharp, IoSparkles, IoInformationCircle, IoApps } from 'react-icons/io5';
 import { LocationSearch } from './components/search/LocationSearch';
 import { Dashboard } from './components/dashboard/Dashboard';
-import { InstallPrompt } from './components/pwa/InstallPrompt';
+import { CreditsModal } from './components/common/CreditsModal';
+import { WeatherCard } from './components/weather/WeatherCard';
 import { useLocationStore } from './store/locations-store';
+import { useUIStore } from './store/ui-store';
 import { useGeolocation, reverseGeocode } from './lib/hooks/useGeolocation';
+import { useActiveLocation } from './lib/hooks/useActiveLocation';
 
 function App() {
   const { locations, addLocation, temperatureUnit, toggleTemperatureUnit } = useLocationStore();
+  const activeLocation = useUIStore((state) => state.activeLocation);
   const geolocation = useGeolocation();
+  const [isCreditsOpen, setIsCreditsOpen] = useState(false);
+  const [isMarketplaceOpen, setIsMarketplaceOpen] = useState(false);
+
+  // Track active location for context-aware widgets
+  const { observeCard } = useActiveLocation({ locations });
 
   // Version check - if you see this in console, the new code has loaded!
-  console.log('🎨 Magazine layout version loaded - Jan 9, 2026 1:21 PM');
+  console.log('♿ Icon-only customize + collapsible forecast - Jan 14, 2026');
 
   const isDemoMode = !import.meta.env.VITE_VISUAL_CROSSING_API_KEY ||
                      import.meta.env.VITE_VISUAL_CROSSING_API_KEY === 'your_api_key_here';
@@ -39,37 +48,32 @@ function App() {
   }, [geolocation, locations.length, addLocation]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
       {/* Skip to main content link for keyboard users */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-6 focus:py-3 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-6 focus:py-3 focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2"
+        style={{ background: 'var(--accent-cyan)', color: 'var(--text-primary)' }}
       >
         Skip to main content
       </a>
 
-      {/* Animated background elements */}
+      {/* Subtle background gradient */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 left-0 w-full h-96 opacity-5" style={{ background: 'radial-gradient(circle at 50% 0%, var(--accent-cyan), transparent 70%)' }}></div>
       </div>
 
       {/* Demo Mode Banner */}
       {isDemoMode && (
-        <div className="relative bg-gradient-to-r from-amber-400 to-orange-400 border-b border-amber-500/20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-            <p className="text-sm text-white font-medium flex items-center gap-2">
-              <IoSparkles className="w-4 h-4" />
+        <div className="relative border-b" style={{
+          background: 'var(--bg-secondary)',
+          borderColor: 'var(--border-default)'
+        }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
+            <p className="text-xs font-medium flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+              <IoSparkles className="w-3 h-3" style={{ color: 'var(--accent-yellow)' }} aria-hidden="true" />
               <span>
-                <strong>Demo Mode:</strong> Using sample data. Get real weather at{' '}
-                <a
-                  href="https://www.visualcrossing.com/weather-api"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline hover:text-amber-100 transition-colors"
-                >
-                  visualcrossing.com
-                </a>
+                <strong style={{ color: 'var(--text-primary)' }}>Demo Mode:</strong> Using sample data
               </span>
             </p>
           </div>
@@ -77,97 +81,147 @@ function App() {
       )}
 
       {/* Header */}
-      <header className="relative backdrop-blur-sm bg-white/60 border-b border-gray-200/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-2xl shadow-lg shadow-blue-500/20" aria-hidden="true">
-                <IoCloudSharp className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <div className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
-                  WeatherWise
-                </div>
-                <p className="text-sm text-gray-600 mt-1 font-medium">
-                  Smart travel planning starts here
-                </p>
+      <header className="relative" style={{
+        background: 'var(--bg-elevated)',
+        borderBottom: '1px solid var(--border-light-default)'
+      }}>
+        <div className="max-w-full mx-auto px-6 py-4">
+          <div className="grid grid-cols-3 items-center gap-4">
+            {/* Left: Logo */}
+            <div className="flex items-center gap-2">
+              <IoCloudSharp className="w-5 h-5" style={{ color: 'var(--accent-cyan)' }} aria-hidden="true" />
+              <h1 className="text-lg font-bold tracking-tight" style={{ color: 'var(--text-dark-primary)' }}>
+                WeatherWise
+              </h1>
+            </div>
+
+            {/* Center: Search Bar */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-md">
+                <LocationSearch />
               </div>
             </div>
 
-            {/* Temperature Unit Toggle */}
-            <button
-              onClick={toggleTemperatureUnit}
-              className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              aria-label={`Switch to ${temperatureUnit === 'celsius' ? 'Fahrenheit' : 'Celsius'}`}
-              aria-pressed="false"
-            >
-              <span className="text-sm font-medium text-gray-700" aria-hidden="true">
+            {/* Right: Controls */}
+            <div className="flex items-center gap-2 justify-end">
+              {/* Temperature Unit Toggle - Pill Style */}
+              <button
+                onClick={toggleTemperatureUnit}
+                className="px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 focus:outline-none hover:opacity-80"
+                style={{
+                  background: temperatureUnit === 'celsius' ? 'rgba(34, 211, 238, 0.15)' : '#f5f5f5',
+                  border: '1px solid var(--border-light-default)',
+                  color: 'var(--text-dark-primary)'
+                }}
+                aria-label={`Switch to ${temperatureUnit === 'celsius' ? 'Fahrenheit' : 'Celsius'}`}
+              >
                 {temperatureUnit === 'celsius' ? '°C' : '°F'}
-              </span>
-              <span className="text-xs text-gray-500" aria-hidden="true">
-                {temperatureUnit === 'celsius' ? 'Celsius' : 'Fahrenheit'}
-              </span>
-            </button>
+              </button>
+
+              {/* Customize Button */}
+              <button
+                onClick={() => setIsMarketplaceOpen(true)}
+                className="p-1.5 rounded-full hover:opacity-80 transition-all duration-200 focus:outline-none"
+                style={{
+                  background: 'rgba(34, 211, 238, 0.15)',
+                  border: '1px solid var(--border-light-default)',
+                  color: 'var(--text-dark-primary)'
+                }}
+                aria-label="Customize widgets"
+                title="Customize Widgets"
+              >
+                <IoApps className="w-4 h-4" />
+              </button>
+
+              {/* Credits Button */}
+              <button
+                onClick={() => setIsCreditsOpen(true)}
+                className="p-1.5 rounded-full transition-all duration-200 focus:outline-none hover:opacity-80"
+                style={{
+                  background: '#f5f5f5',
+                  border: '1px solid var(--border-light-default)',
+                  color: 'var(--text-dark-tertiary)'
+                }}
+                aria-label="View credits and attribution"
+                title="Credits"
+              >
+                <IoInformationCircle className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main id="main-content" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero Section with Search */}
-        <section className="mb-16 text-center animate-fade-in" aria-labelledby="hero-heading">
-          <h1 id="hero-heading" className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
-            Compare weather,
-            <br />
-            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              plan smarter trips
-            </span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
-            Side-by-side weather comparison for up to 5 destinations. Make confident decisions about where to go.
-          </p>
-
-          {/* Search Box */}
-          <div className="max-w-2xl mx-auto">
-            <LocationSearch />
-            {locations.length > 0 && (
-              <p className="text-sm text-gray-500 mt-4 font-medium" role="status" aria-live="polite">
-                <span className="inline-flex items-center gap-2 px-3 py-1 bg-white/80 backdrop-blur-sm rounded-full border border-gray-200">
-                  {locations.length} of 5 locations
-                </span>
-              </p>
-            )}
+      {/* Main Content - Two Column Layout */}
+      <main id="main-content" className="h-[calc(100vh-88px)] overflow-hidden">
+        <div className="h-full flex gap-5" style={{
+          background: 'var(--bg-primary)',
+          padding: '20px'
+        }}>
+          {/* Left Side - Weather Cards Vertical Carousel */}
+          <div className="h-full flex flex-col" style={{
+            width: 'fit-content',
+            minWidth: '400px',
+            maxWidth: '600px',
+            flexShrink: 0
+          }}>
+            {/* Weather Cards - Full Viewport Scroll Snap */}
+            <div
+              className="flex-1 overflow-y-auto"
+              style={{
+                scrollSnapType: 'y mandatory',
+                scrollBehavior: 'smooth',
+                paddingRight: '8px'
+              }}
+            >
+              {locations.length === 0 ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center">
+                    <IoCloudSharp className="w-16 h-16 mx-auto mb-4 opacity-20" style={{ color: 'var(--text-tertiary)' }} />
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      Search for a location to get started
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {locations.map((location, index) => (
+                    <div
+                      key={location}
+                      style={{
+                        scrollSnapAlign: 'start',
+                        scrollSnapStop: 'always',
+                        minHeight: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        paddingBottom: index === locations.length - 1 ? '0' : '20px'
+                      }}
+                    >
+                      <WeatherCard
+                        location={location}
+                        onIntersect={observeCard}
+                        isActive={activeLocation === location}
+                      />
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
           </div>
-        </section>
 
-        {/* Widget Dashboard */}
-        <Dashboard />
-      </main>
-
-      {/* Footer */}
-      <footer className="relative mt-24 backdrop-blur-sm bg-white/40 border-t border-gray-200/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-gray-600">
-              Weather data by{' '}
-              <a
-                href="https://www.visualcrossing.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
-              >
-                Visual Crossing
-              </a>
-            </p>
-            <p className="text-sm text-gray-500">
-              Built with ❤️ for travelers
-            </p>
+          {/* Right Side - Widget Dashboard */}
+          <div className="flex-1 h-full flex flex-col">
+            <Dashboard
+              isMarketplaceOpen={isMarketplaceOpen}
+              onMarketplaceClose={() => setIsMarketplaceOpen(false)}
+            />
           </div>
         </div>
-      </footer>
+      </main>
 
-      {/* PWA Install Prompt */}
-      <InstallPrompt />
+      {/* Credits Modal */}
+      <CreditsModal isOpen={isCreditsOpen} onClose={() => setIsCreditsOpen(false)} />
     </div>
   );
 }

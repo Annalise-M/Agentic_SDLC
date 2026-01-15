@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { IoClose, IoCheckmark, IoGrid, IoList, IoAlbums } from 'react-icons/io5';
+import { IoClose, IoCheckmark } from 'react-icons/io5';
 import { useWidgetStore } from '../../store/widget-store';
 import { WIDGET_CATALOG, getWidgetCategories } from '../../lib/widgets/widget-catalog';
 import type { WidgetMetadata } from '../../types/widgets';
@@ -18,7 +18,7 @@ interface WidgetMarketplaceProps {
 }
 
 export function WidgetMarketplace({ isOpen, onClose }: WidgetMarketplaceProps) {
-  const { widgets, addWidget, disableWidget, layout, setLayout } = useWidgetStore();
+  const { widgets, addWidget, disableWidget } = useWidgetStore();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const categories = ['all', ...getWidgetCategories()];
 
@@ -68,40 +68,6 @@ export function WidgetMarketplace({ isOpen, onClose }: WidgetMarketplaceProps) {
           >
             <IoClose size={24} />
           </button>
-        </div>
-
-        {/* Layout Selector */}
-        <div className={styles.layoutSection}>
-          <label className={styles.layoutLabel}>Dashboard Layout:</label>
-          <div className={styles.layoutButtons}>
-            <button
-              className={`${styles.layoutButton} ${layout === 'grid' ? styles.active : ''}`}
-              onClick={() => setLayout('grid')}
-              aria-label="Grid layout"
-              aria-pressed={layout === 'grid'}
-            >
-              <IoGrid size={20} />
-              <span>Grid</span>
-            </button>
-            <button
-              className={`${styles.layoutButton} ${layout === 'sidebar' ? styles.active : ''}`}
-              onClick={() => setLayout('sidebar')}
-              aria-label="Sidebar layout"
-              aria-pressed={layout === 'sidebar'}
-            >
-              <IoAlbums size={20} />
-              <span>Sidebar</span>
-            </button>
-            <button
-              className={`${styles.layoutButton} ${layout === 'minimal' ? styles.active : ''}`}
-              onClick={() => setLayout('minimal')}
-              aria-label="Minimal layout"
-              aria-pressed={layout === 'minimal'}
-            >
-              <IoList size={20} />
-              <span>Minimal</span>
-            </button>
-          </div>
         </div>
 
         {/* Category Filter */}

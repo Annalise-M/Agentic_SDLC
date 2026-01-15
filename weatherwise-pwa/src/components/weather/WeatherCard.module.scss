@@ -3,30 +3,43 @@
   background: white;
   overflow: hidden;
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 24px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  height: auto;
 
-  /* Mobile: edge-to-edge, no rounded corners */
-  border-radius: 0;
-  box-shadow: none;
-  height: 100vh;
-  height: 100dvh; /* Dynamic viewport height for mobile browsers */
-
-  /* Tablet: add slight rounding */
-  @media (min-width: 768px) {
+  /* Mobile: smaller height to fit with padding */
+  @media (max-width: 767px) {
     border-radius: 16px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-    height: auto;
-    min-height: 600px;
+    min-height: auto;
   }
 
-  /* Desktop: full magazine style */
-  @media (min-width: 1024px) {
+  /* Tablet and up: consistent sizing */
+  @media (min-width: 768px) {
     border-radius: 24px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Desktop: enhanced shadow on hover */
+  @media (min-width: 1024px) {
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
-    min-height: 650px;
 
     &:hover {
       box-shadow: 0 32px 100px rgba(0, 0, 0, 0.12);
       transform: translateY(-4px);
+    }
+  }
+
+  /* Active state - subtle cyan glow */
+  &.isActive {
+    box-shadow:
+      0 0 0 2px var(--accent-cyan),
+      0 12px 40px rgba(34, 211, 238, 0.15);
+    transform: scale(1.02);
+
+    @media (min-width: 1024px) {
+      box-shadow:
+        0 0 0 2px var(--accent-cyan),
+        0 24px 80px rgba(34, 211, 238, 0.2);
     }
   }
 }
@@ -350,20 +363,69 @@
   }
 }
 
+.forecastToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1rem;
+
+  &:hover {
+    .forecastTitle {
+      color: white;
+    }
+    .toggleIcon {
+      color: white;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, 0.8);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
 .forecastTitle {
   font-size: 0.75rem;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.85);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  transition: color 0.2s ease;
+}
+
+.toggleIcon {
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.2s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 .forecastList {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .forecastDay {
@@ -532,111 +594,3 @@
   color: #991b1b;
 }
 
-// ============================================
-// Booking Actions Section
-// ============================================
-
-.bookingActions {
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-
-  @media (min-width: 768px) {
-    margin-top: 2rem;
-    padding-top: 2rem;
-  }
-}
-
-.bookingButtons {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-
-  @media (min-width: 500px) {
-    flex-direction: row;
-    gap: 1rem;
-  }
-}
-
-.bookingButton {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  padding: 1rem 1.25rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  flex: 1;
-  cursor: pointer;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-
-  // Focus state for accessibility
-  &:focus-visible {
-    outline: 2px solid rgba(59, 130, 246, 0.8);
-    outline-offset: 2px;
-  }
-}
-
-.bookingIcon {
-  flex-shrink: 0;
-  width: 24px;
-  height: 24px;
-  color: rgba(255, 255, 255, 0.9);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-.bookingText {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.125rem;
-  flex: 1;
-}
-
-.bookingLabel {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.bookingProvider {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-// Mobile specific adjustments
-@media (max-width: 499px) {
-  .bookingButton {
-    padding: 0.875rem 1rem;
-  }
-
-  .bookingIcon {
-    width: 20px;
-    height: 20px;
-  }
-
-  .bookingLabel {
-    font-size: 0.875rem;
-  }
-
-  .bookingProvider {
-    font-size: 0.6875rem;
-  }
-}

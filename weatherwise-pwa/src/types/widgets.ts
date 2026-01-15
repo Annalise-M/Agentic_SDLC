@@ -21,6 +21,8 @@ export type WidgetCategory =
  */
 export type WidgetType =
   | 'weather-comparison'   // Core weather cards (always enabled)
+  | 'temperature-trend'    // 7-day temperature trend chart
+  | 'weather-metrics'      // Animated gauge metrics (humidity, UV, etc.)
   | 'flight-search'        // Skyscanner flight finder
   | 'hotel-search'         // Booking.com hotel finder
   | 'packing-list'         // Weather-based packing suggestions

@@ -1,4 +1,4 @@
-import { IoClose, IoWater, IoEye, IoSpeedometer, IoSunny, IoLocationSharp, IoStar, IoStarOutline } from 'react-icons/io5';
+import { IoClose, IoWater, IoEye, IoSpeedometer, IoSunny, IoLocationSharp, IoStar, IoStarOutline, IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import { WiStrongWind } from 'react-icons/wi';
 import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
@@ -14,14 +14,17 @@ import styles from './WeatherCard.module.scss';
 
 interface WeatherCardProps {
   location: string;
+  onIntersect?: (element: HTMLElement | null, location: string) => void;
+  isActive?: boolean;
 }
 
-export function WeatherCard({ location }: WeatherCardProps) {
+export function WeatherCard({ location, onIntersect, isActive = false }: WeatherCardProps) {
   console.log('✨ NEW SCSS WeatherCard rendering for:', location);
   const { data, isLoading, error } = useWeather(location);
   const { removeLocation, temperatureUnit, toggleOfflineLocation, isOfflineLocation, maxOfflineLocations, offlineLocations } = useLocationStore();
   const cardRef = useRef<HTMLDivElement>(null);
   const [locationImage, setLocationImage] = useState<string>('');
+  const [isForecastExpanded, setIsForecastExpanded] = useState<boolean>(false);
   const isOffline = isOfflineLocation(location);
 
   // Fetch location-specific landscape image (deterministic, no people)
@@ -61,6 +64,13 @@ export function WeatherCard({ location }: WeatherCardProps) {
       );
     }
   }, [data, isLoading]);
+
+  // Register with IntersectionObserver for active location tracking
+  useEffect(() => {
+    if (onIntersect && cardRef.current) {
+      onIntersect(cardRef.current, location);
+    }
+  }, [onIntersect, location]);
 
   // Handle offline toggle
   const handleOfflineToggle = () => {
@@ -147,8 +157,9 @@ export function WeatherCard({ location }: WeatherCardProps) {
   return (
     <article
       ref={cardRef}
-      className={styles.weatherCard}
+      className={`${styles.weatherCard} ${isActive ? styles.isActive : ''}`}
       aria-label={`Weather information for ${cityName}`}
+      aria-current={isActive ? 'location' : undefined}
     >
       <div className={styles.cardContainer}>
         {/* Left Side - Location Image */}
@@ -262,14 +273,28 @@ export function WeatherCard({ location }: WeatherCardProps) {
 
           {/* 7-Day Forecast */}
           <section className={styles.forecastSection} aria-labelledby="forecast-heading">
-            <h3 id="forecast-heading" className={styles.forecastTitle}>
-              7-Day Forecast
-            </h3>
-            <div className={styles.forecastList} role="list">
-              {forecast.slice(0, 5).map((day: WeatherDay) => (
-                <ForecastDay key={day.datetime} day={day} temperatureUnit={temperatureUnit} />
-              ))}
-            </div>
+            <button
+              onClick={() => setIsForecastExpanded(!isForecastExpanded)}
+              className={styles.forecastToggle}
+              aria-expanded={isForecastExpanded}
+              aria-controls="forecast-list"
+            >
+              <h3 id="forecast-heading" className={styles.forecastTitle}>
+                7-Day Forecast
+              </h3>
+              {isForecastExpanded ? (
+                <IoChevronUp className={styles.toggleIcon} aria-hidden="true" />
+              ) : (
+                <IoChevronDown className={styles.toggleIcon} aria-hidden="true" />
+              )}
+            </button>
+            {isForecastExpanded && (
+              <div id="forecast-list" className={styles.forecastList} role="list">
+                {forecast.slice(0, 7).map((day: WeatherDay) => (
+                  <ForecastDay key={day.datetime} day={day} temperatureUnit={temperatureUnit} />
+                ))}
+              </div>
+            )}
           </section>
         </div>
       </div>
