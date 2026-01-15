@@ -8,6 +8,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Widget, WidgetType, WidgetConfig, DashboardConfig } from '../types/widgets';
+import { getWidgetMetadata } from '../lib/widgets/widget-catalog';
 
 interface WidgetStore extends DashboardConfig {
   // Widget management
@@ -43,6 +44,8 @@ const DEFAULT_WIDGETS: Widget[] = [
     enabled: true,
     position: 0,
     config: {},
+    width: 2,
+    height: 1,
   },
   {
     id: 'temp-trend',
@@ -50,6 +53,8 @@ const DEFAULT_WIDGETS: Widget[] = [
     enabled: true,
     position: 1,
     config: {},
+    width: 2,
+    height: 1,
   },
   {
     id: 'metrics',
@@ -57,6 +62,8 @@ const DEFAULT_WIDGETS: Widget[] = [
     enabled: true,
     position: 2,
     config: {},
+    width: 2,
+    height: 2,
   },
   {
     id: 'flights',
@@ -64,6 +71,8 @@ const DEFAULT_WIDGETS: Widget[] = [
     enabled: false,
     position: 3,
     config: {},
+    width: 1,
+    height: 1,
   },
   {
     id: 'hotels',
@@ -71,6 +80,8 @@ const DEFAULT_WIDGETS: Widget[] = [
     enabled: false,
     position: 4,
     config: {},
+    width: 1,
+    height: 1,
   },
   {
     id: 'packing',
@@ -78,6 +89,8 @@ const DEFAULT_WIDGETS: Widget[] = [
     enabled: false,
     position: 5,
     config: {},
+    width: 1,
+    height: 2,
   },
 ];
 
@@ -102,7 +115,8 @@ export const useWidgetStore = create<WidgetStore>()(
           return;
         }
 
-        // Create new widget
+        // Create new widget with default sizes from catalog
+        const metadata = getWidgetMetadata(type);
         const newWidget: Widget = {
           id: `${type}-${Date.now()}`,
           type,
@@ -110,6 +124,8 @@ export const useWidgetStore = create<WidgetStore>()(
           position: get().widgets.length,
           config,
           updatedAt: Date.now(),
+          width: metadata?.defaultWidth || 1,
+          height: metadata?.defaultHeight || 1,
         };
 
         set((state) => ({

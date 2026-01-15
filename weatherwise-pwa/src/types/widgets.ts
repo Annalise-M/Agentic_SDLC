@@ -55,6 +55,12 @@ export interface Widget {
 
   /** Last updated timestamp */
   updatedAt?: number;
+
+  /** Widget grid width (1 or 2 columns) */
+  width?: number;
+
+  /** Widget grid height (1 or 2 rows) */
+  height?: number;
 }
 
 /**
@@ -100,6 +106,12 @@ export interface WidgetMetadata {
 
   /** Preview image URL */
   previewImage?: string;
+
+  /** Default grid width (1 or 2 columns) */
+  defaultWidth?: number;
+
+  /** Default grid height (1 or 2 rows) */
+  defaultHeight?: number;
 }
 
 /**

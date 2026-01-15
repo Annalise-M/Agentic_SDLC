@@ -20,6 +20,8 @@ export const WIDGET_CATALOG: WidgetMetadata[] = [
     icon: '🌤️',
     category: 'weather',
     requiresAuth: false,
+    defaultWidth: 2,
+    defaultHeight: 1,
   },
 
   // Booking widgets
@@ -31,6 +33,8 @@ export const WIDGET_CATALOG: WidgetMetadata[] = [
     icon: '✈️',
     category: 'booking',
     requiresAuth: false,
+    defaultWidth: 1,
+    defaultHeight: 1,
   },
   {
     id: 'hotels',
@@ -40,6 +44,8 @@ export const WIDGET_CATALOG: WidgetMetadata[] = [
     icon: '🏨',
     category: 'booking',
     requiresAuth: false,
+    defaultWidth: 1,
+    defaultHeight: 1,
   },
 
   // Planning widgets
@@ -51,6 +57,8 @@ export const WIDGET_CATALOG: WidgetMetadata[] = [
     icon: '🎒',
     category: 'planning',
     requiresAuth: false,
+    defaultWidth: 1,
+    defaultHeight: 2,
   },
   {
     id: 'calendar',
@@ -60,6 +68,8 @@ export const WIDGET_CATALOG: WidgetMetadata[] = [
     icon: '📅',
     category: 'planning',
     requiresAuth: false,
+    defaultWidth: 1,
+    defaultHeight: 1,
   },
 
   // Learning widgets
@@ -73,6 +83,8 @@ export const WIDGET_CATALOG: WidgetMetadata[] = [
     requiresAuth: true,
     authProvider: 'duolingo',
     isPremium: true,
+    defaultWidth: 1,
+    defaultHeight: 1,
   },
 
   // Finance widgets
@@ -84,6 +96,8 @@ export const WIDGET_CATALOG: WidgetMetadata[] = [
     icon: '💰',
     category: 'finance',
     requiresAuth: false,
+    defaultWidth: 1,
+    defaultHeight: 1,
   },
   {
     id: 'currency',
@@ -93,6 +107,8 @@ export const WIDGET_CATALOG: WidgetMetadata[] = [
     icon: '💱',
     category: 'finance',
     requiresAuth: false,
+    defaultWidth: 1,
+    defaultHeight: 1,
   },
 ];
 

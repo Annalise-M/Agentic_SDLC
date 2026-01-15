@@ -190,8 +190,14 @@ export function WidgetWrapper({
     }
   };
 
+  const widgetSize = `${widget.width || 1}x${widget.height || 1}`;
+
   return (
-    <div className={styles.widgetWrapper} data-widget-id={widget.id}>
+    <div
+      className={styles.widgetWrapper}
+      data-widget-id={widget.id}
+      data-size={widgetSize}
+    >
       {/* Drag Handle */}
       <div className={styles.dragHandle} aria-label="Drag to reorder">
         <div className={styles.dragDots}>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { IoCloudSharp, IoSparkles, IoInformationCircle, IoApps } from 'react-icons/io5';
 import { LocationSearch } from './components/search/LocationSearch';
 import { Dashboard } from './components/dashboard/Dashboard';
@@ -15,6 +15,7 @@ function App() {
   const geolocation = useGeolocation();
   const [isCreditsOpen, setIsCreditsOpen] = useState(false);
   const [isMarketplaceOpen, setIsMarketplaceOpen] = useState(false);
+  const isAutoDetecting = useRef(false);
 
   // Track active location for context-aware widgets
   const { observeCard } = useActiveLocation({ locations });
@@ -25,24 +26,32 @@ function App() {
   const isDemoMode = !import.meta.env.VITE_VISUAL_CROSSING_API_KEY ||
                      import.meta.env.VITE_VISUAL_CROSSING_API_KEY === 'your_api_key_here';
 
-  // Auto-detect user's location on first visit
+  // Auto-detect user's location when no locations exist
   useEffect(() => {
-    const hasAutoDetected = localStorage.getItem('auto-location-detected');
-
+    // Only auto-detect if:
+    // 1. No locations currently exist
+    // 2. Geolocation is available and loaded
+    // 3. User hasn't explicitly denied geolocation (handled by useGeolocation hook)
+    // 4. Not already in the process of auto-detecting (prevents race conditions)
     if (
-      !hasAutoDetected &&
       locations.length === 0 &&
       geolocation.latitude &&
       geolocation.longitude &&
-      !geolocation.loading
+      !geolocation.loading &&
+      !isAutoDetecting.current
     ) {
+      isAutoDetecting.current = true;
+      console.log('📍 Starting auto-detection...');
+
       reverseGeocode(geolocation.latitude, geolocation.longitude)
         .then((locationName) => {
+          console.log('📍 Auto-detected location:', locationName);
           addLocation(locationName);
-          localStorage.setItem('auto-location-detected', 'true');
+          isAutoDetecting.current = false;
         })
         .catch((error) => {
           console.error('Failed to add current location:', error);
+          isAutoDetecting.current = false;
         });
     }
   }, [geolocation, locations.length, addLocation]);
