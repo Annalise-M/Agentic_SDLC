@@ -194,14 +194,6 @@
   // Subtle hover effect
   &:hover {
     box-shadow: var(--shadow-lg);
-
-    .widgetControls {
-      opacity: 1;
-    }
-
-    .dragHandle {
-      opacity: 0.6;
-    }
   }
 
   &.dragging {
@@ -268,7 +260,7 @@
   position: absolute;
   top: 1rem;
   left: 1rem;
-  opacity: 0;
+  opacity: 0.6; // Always visible
   transition: opacity 0.2s ease;
   z-index: 10;
   cursor: grab;
@@ -278,8 +270,8 @@
     cursor: grabbing;
   }
 
-  @media (max-width: 767px) {
-    opacity: 0.4; // Slightly visible on mobile
+  &:hover {
+    opacity: 1; // Full opacity on hover
   }
 }
 
@@ -307,13 +299,9 @@
   right: 1rem;
   display: flex;
   gap: 0.5rem;
-  opacity: 0;
+  opacity: 1; // Always visible
   transition: opacity 0.2s ease;
   z-index: 10;
-
-  @media (max-width: 767px) {
-    opacity: 1;
-  }
 }
 
 .widgetButton {
