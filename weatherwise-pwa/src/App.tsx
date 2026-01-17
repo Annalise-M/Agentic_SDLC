@@ -1,30 +1,58 @@
 import { useEffect, useState, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollToPlugin } from 'gsap/dist/ScrollToPlugin';
 import { IoCloudSharp, IoSparkles, IoInformationCircle, IoApps } from 'react-icons/io5';
 import { LocationSearch } from './components/search/LocationSearch';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { CreditsModal } from './components/common/CreditsModal';
-import { WeatherCard } from './components/weather/WeatherCard';
+import { ApiUsageStats } from './components/common/ApiUsageStats';
 import { useLocationStore } from './store/locations-store';
-import { useUIStore } from './store/ui-store';
 import { useGeolocation, reverseGeocode } from './lib/hooks/useGeolocation';
-import { useActiveLocation } from './lib/hooks/useActiveLocation';
+import styles from './App.module.scss';
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollToPlugin);
 
 function App() {
   const { locations, addLocation, temperatureUnit, toggleTemperatureUnit } = useLocationStore();
-  const activeLocation = useUIStore((state) => state.activeLocation);
   const geolocation = useGeolocation();
   const [isCreditsOpen, setIsCreditsOpen] = useState(false);
   const [isMarketplaceOpen, setIsMarketplaceOpen] = useState(false);
   const isAutoDetecting = useRef(false);
-
-  // Track active location for context-aware widgets
-  const { observeCard } = useActiveLocation({ locations });
+  const mainRef = useRef<HTMLElement>(null);
 
   // Version check - if you see this in console, the new code has loaded!
   console.log('♿ Icon-only customize + collapsible forecast - Jan 14, 2026');
 
   const isDemoMode = !import.meta.env.VITE_VISUAL_CROSSING_API_KEY ||
                      import.meta.env.VITE_VISUAL_CROSSING_API_KEY === 'your_api_key_here';
+
+  // Disabled GSAP scroll snap - was causing layout bouncing issues
+  // Can be re-enabled later with proper grid integration
+  // useEffect(() => {
+  //   if (!mainRef.current) return;
+  //   const main = mainRef.current;
+  //   let scrollTimeout: ReturnType<typeof setTimeout>;
+  //   const handleScroll = () => {
+  //     clearTimeout(scrollTimeout);
+  //     scrollTimeout = setTimeout(() => {
+  //       const scrollTop = main.scrollTop;
+  //       const viewportHeight = main.clientHeight;
+  //       const currentSection = Math.round(scrollTop / viewportHeight);
+  //       const targetScrollTop = currentSection * viewportHeight;
+  //       gsap.to(main, {
+  //         scrollTo: { y: targetScrollTop },
+  //         duration: 0.5,
+  //         ease: 'power2.out',
+  //       });
+  //     }, 150);
+  //   };
+  //   main.addEventListener('scroll', handleScroll);
+  //   return () => {
+  //     main.removeEventListener('scroll', handleScroll);
+  //     clearTimeout(scrollTimeout);
+  //   };
+  // }, []);
 
   // Auto-detect user's location when no locations exist
   useEffect(() => {
@@ -57,32 +85,25 @@ function App() {
   }, [geolocation, locations.length, addLocation]);
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
+    <div className={styles.app}>
       {/* Skip to main content link for keyboard users */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-6 focus:py-3 focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2"
-        style={{ background: 'var(--accent-cyan)', color: 'var(--text-primary)' }}
-      >
+      <a href="#main-content" className={styles.skipToContent}>
         Skip to main content
       </a>
 
       {/* Subtle background gradient */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div className="absolute top-0 left-0 w-full h-96 opacity-5" style={{ background: 'radial-gradient(circle at 50% 0%, var(--accent-cyan), transparent 70%)' }}></div>
+      <div className={styles.backgroundGradient} aria-hidden="true">
+        <div className={styles.gradientOverlay}></div>
       </div>
 
       {/* Demo Mode Banner */}
       {isDemoMode && (
-        <div className="relative border-b" style={{
-          background: 'var(--bg-secondary)',
-          borderColor: 'var(--border-default)'
-        }}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
-            <p className="text-xs font-medium flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
-              <IoSparkles className="w-3 h-3" style={{ color: 'var(--accent-yellow)' }} aria-hidden="true" />
+        <div className={styles.demoModeBanner}>
+          <div className={styles.bannerContent}>
+            <p className={styles.bannerText}>
+              <IoSparkles className={styles.icon} aria-hidden="true" />
               <span>
-                <strong style={{ color: 'var(--text-primary)' }}>Demo Mode:</strong> Using sample data
+                <strong>Demo Mode:</strong> Using sample data
               </span>
             </p>
           </div>
@@ -90,38 +111,30 @@ function App() {
       )}
 
       {/* Header */}
-      <header className="relative" style={{
-        background: 'var(--bg-elevated)',
-        borderBottom: '1px solid var(--border-light-default)'
-      }}>
-        <div className="max-w-full mx-auto px-6 py-4">
-          <div className="grid grid-cols-3 items-center gap-4">
+      <header className={styles.header}>
+        <div className={styles.headerContent}>
+          <div className={styles.headerGrid}>
             {/* Left: Logo */}
-            <div className="flex items-center gap-2">
-              <IoCloudSharp className="w-5 h-5" style={{ color: 'var(--accent-cyan)' }} aria-hidden="true" />
-              <h1 className="text-lg font-bold tracking-tight" style={{ color: 'var(--text-dark-primary)' }}>
-                WeatherWise
-              </h1>
+            <div className={styles.logo}>
+              <IoCloudSharp className={styles.logoIcon} aria-hidden="true" />
+              <h1 className={styles.logoText}>WeatherWise</h1>
             </div>
 
             {/* Center: Search Bar */}
-            <div className="flex justify-center">
-              <div className="w-full max-w-md">
+            <div className={styles.searchContainer}>
+              <div className={styles.searchWrapper}>
                 <LocationSearch />
               </div>
             </div>
 
             {/* Right: Controls */}
-            <div className="flex items-center gap-2 justify-end">
-              {/* Temperature Unit Toggle - Pill Style */}
+            <div className={styles.controls}>
+              {/* Temperature Unit Toggle */}
               <button
                 onClick={toggleTemperatureUnit}
-                className="px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 focus:outline-none hover:opacity-80"
-                style={{
-                  background: temperatureUnit === 'celsius' ? 'rgba(34, 211, 238, 0.15)' : '#f5f5f5',
-                  border: '1px solid var(--border-light-default)',
-                  color: 'var(--text-dark-primary)'
-                }}
+                className={`${styles.controlButton} ${styles.temperatureToggle} ${
+                  temperatureUnit === 'celsius' ? styles.celsius : ''
+                }`}
                 aria-label={`Switch to ${temperatureUnit === 'celsius' ? 'Fahrenheit' : 'Celsius'}`}
               >
                 {temperatureUnit === 'celsius' ? '°C' : '°F'}
@@ -130,97 +143,31 @@ function App() {
               {/* Customize Button */}
               <button
                 onClick={() => setIsMarketplaceOpen(true)}
-                className="p-1.5 rounded-full hover:opacity-80 transition-all duration-200 focus:outline-none"
-                style={{
-                  background: 'rgba(34, 211, 238, 0.15)',
-                  border: '1px solid var(--border-light-default)',
-                  color: 'var(--text-dark-primary)'
-                }}
+                className={`${styles.controlButton} ${styles.customizeButton}`}
                 aria-label="Customize widgets"
                 title="Customize Widgets"
               >
-                <IoApps className="w-4 h-4" />
+                <IoApps className={styles.icon} />
               </button>
 
               {/* Credits Button */}
               <button
                 onClick={() => setIsCreditsOpen(true)}
-                className="p-1.5 rounded-full transition-all duration-200 focus:outline-none hover:opacity-80"
-                style={{
-                  background: '#f5f5f5',
-                  border: '1px solid var(--border-light-default)',
-                  color: 'var(--text-dark-tertiary)'
-                }}
+                className={`${styles.controlButton} ${styles.creditsButton}`}
                 aria-label="View credits and attribution"
                 title="Credits"
               >
-                <IoInformationCircle className="w-4 h-4" />
+                <IoInformationCircle className={styles.icon} />
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content - Two Column Layout */}
-      <main id="main-content" className="h-[calc(100vh-88px)] overflow-hidden">
-        <div className="h-full flex gap-5" style={{
-          background: 'var(--bg-primary)',
-          padding: '20px'
-        }}>
-          {/* Left Side - Weather Cards Vertical Carousel */}
-          <div className="h-full flex flex-col" style={{
-            width: 'fit-content',
-            minWidth: '400px',
-            maxWidth: '600px',
-            flexShrink: 0
-          }}>
-            {/* Weather Cards - Full Viewport Scroll Snap */}
-            <div
-              className="flex-1 overflow-y-auto"
-              style={{
-                scrollSnapType: 'y mandatory',
-                scrollBehavior: 'smooth',
-                paddingRight: '8px'
-              }}
-            >
-              {locations.length === 0 ? (
-                <div className="flex items-center justify-center h-full">
-                  <div className="text-center">
-                    <IoCloudSharp className="w-16 h-16 mx-auto mb-4 opacity-20" style={{ color: 'var(--text-tertiary)' }} />
-                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                      Search for a location to get started
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  {locations.map((location, index) => (
-                    <div
-                      key={location}
-                      style={{
-                        scrollSnapAlign: 'start',
-                        scrollSnapStop: 'always',
-                        minHeight: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        paddingBottom: index === locations.length - 1 ? '0' : '20px'
-                      }}
-                    >
-                      <WeatherCard
-                        location={location}
-                        onIntersect={observeCard}
-                        isActive={activeLocation === location}
-                      />
-                    </div>
-                  ))}
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Right Side - Widget Dashboard */}
-          <div className="flex-1 h-full flex flex-col">
+      {/* Main Content - Snap Scroll Grid */}
+      <main id="main-content" className={styles.main} ref={mainRef}>
+        <div className={styles.mainContainer}>
+          <div className={styles.mainInner}>
             <Dashboard
               isMarketplaceOpen={isMarketplaceOpen}
               onMarketplaceClose={() => setIsMarketplaceOpen(false)}
@@ -231,6 +178,9 @@ function App() {
 
       {/* Credits Modal */}
       <CreditsModal isOpen={isCreditsOpen} onClose={() => setIsCreditsOpen(false)} />
+
+      {/* API Usage Stats (bottom-right corner) */}
+      <ApiUsageStats />
     </div>
   );
 }

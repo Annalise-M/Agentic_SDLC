@@ -7,10 +7,12 @@
   max-width: 1600px;
   margin: 0 auto;
   position: relative;
+  // padding: 0 2rem; // Edge spacing from viewport
 
   // Apply grid to ALL containers by default - EXACT COPY FROM test-grid.html
   display: grid !important;
-  grid-auto-rows: minmax(200px, auto) !important;
+  grid-template-columns: repeat(6, 1fr) !important;
+  // grid-auto-rows: minmax(200px, auto) !important;
   gap: 24px !important;
   align-content: start;
 
@@ -19,19 +21,26 @@
     position: relative !important;
   }
 
-  // Tablet
+  @media (max-width: 767px) {
+    padding: 0 1rem; // Less padding on mobile
+  }
+
+  // Tablet: 4-column grid
   @media (max-width: 1199px) {
+    grid-template-columns: repeat(4, 1fr) !important;
     grid-auto-rows: minmax(200px, auto) !important;
   }
 
-  // Mobile
+  // Mobile: 2-column grid
   @media (max-width: 767px) {
+    grid-template-columns: repeat(2, 1fr) !important;
     grid-auto-rows: minmax(200px, auto) !important;
     gap: 16px !important;
   }
 
-  // Small mobile
+  // Small mobile: single column
   @media (max-width: 479px) {
+    grid-template-columns: 1fr !important;
     grid-auto-rows: minmax(200px, auto) !important;
     gap: 16px !important;
   }
@@ -98,20 +107,24 @@
 // This class has HIGHER specificity than the base .widgetContainer
 .widgetContainer.layout-grid {
   display: grid !important;
+  grid-template-columns: repeat(6, 1fr) !important;
   grid-auto-rows: minmax(200px, auto) !important;
   gap: 24px !important;
   align-content: start !important;
 
   @media (max-width: 1199px) {
+    grid-template-columns: repeat(4, 1fr) !important;
     grid-auto-rows: minmax(200px, auto) !important;
   }
 
   @media (max-width: 767px) {
+    grid-template-columns: repeat(2, 1fr) !important;
     grid-auto-rows: minmax(200px, auto) !important;
     gap: 16px !important;
   }
 
   @media (max-width: 479px) {
+    grid-template-columns: 1fr !important;
     grid-auto-rows: minmax(200px, auto) !important;
     gap: 16px !important;
   }
@@ -120,19 +133,23 @@
 // DEPRECATED: Old single-class selector (keeping for backwards compatibility)
 .layout-grid {
   display: grid !important;
+  grid-template-columns: repeat(6, 1fr) !important;
   grid-auto-rows: minmax(200px, auto) !important;
   gap: 24px !important;
 
   @media (max-width: 1199px) {
+    grid-template-columns: repeat(4, 1fr) !important;
     grid-auto-rows: minmax(200px, auto) !important;
   }
 
   @media (max-width: 767px) {
+    grid-template-columns: repeat(2, 1fr) !important;
     grid-auto-rows: minmax(200px, auto) !important;
     gap: 16px !important;
   }
 
   @media (max-width: 479px) {
+    grid-template-columns: 1fr !important;
     grid-auto-rows: minmax(200px, auto) !important;
     gap: 16px !important;
   }

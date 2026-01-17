@@ -1,12 +1,15 @@
 import axios from 'axios';
 import type { WeatherData } from '../../types/weather';
 import { getMockWeatherData } from '../data/mock-weather';
+import { fetchWeatherOWM, getWeatherIconUrlOWM } from './openweathermap';
 
-const API_KEY = import.meta.env.VITE_VISUAL_CROSSING_API_KEY;
+const VISUAL_CROSSING_KEY = import.meta.env.VITE_VISUAL_CROSSING_API_KEY;
+const OPENWEATHER_KEY = import.meta.env.VITE_OPENWEATHERMAP_API_KEY;
 const BASE_URL = 'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline';
 
-// Demo mode flag
-const DEMO_MODE = !API_KEY || API_KEY === 'your_api_key_here';
+// Determine which API to use (OpenWeatherMap preferred for better accuracy)
+const USE_OPENWEATHERMAP = OPENWEATHER_KEY && OPENWEATHER_KEY !== 'your_api_key_here';
+const DEMO_MODE = !USE_OPENWEATHERMAP && (!VISUAL_CROSSING_KEY || VISUAL_CROSSING_KEY === 'your_api_key_here');
 
 export interface FetchWeatherParams {
   location: string;
@@ -68,8 +71,29 @@ export async function fetchWeather(params: FetchWeatherParams): Promise<WeatherD
 
 /**
  * Fetch current weather and 7-day forecast for a location
+ * Uses OpenWeatherMap for better accuracy, falls back to Visual Crossing
  */
 export async function fetchCurrentAndForecast(location: string): Promise<WeatherData> {
+  // Demo mode: return mock data
+  if (DEMO_MODE) {
+    console.log('🎭 Demo mode: Using mock weather data for', location);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return getMockWeatherData(location);
+  }
+
+  // Use OpenWeatherMap (primary - more accurate, better free tier)
+  if (USE_OPENWEATHERMAP) {
+    try {
+      console.log('🌤️ Using OpenWeatherMap (primary)');
+      return await fetchWeatherOWM(location);
+    } catch (error) {
+      console.warn('OpenWeatherMap failed, falling back to Visual Crossing:', error);
+      // Fall through to Visual Crossing fallback
+    }
+  }
+
+  // Fallback: Visual Crossing
+  console.log('🌥️ Using Visual Crossing (fallback)');
   const today = new Date();
   const endDate = new Date(today);
   endDate.setDate(endDate.getDate() + 7);
@@ -94,7 +118,14 @@ function formatDate(date: Date): string {
 
 /**
  * Get weather icon URL from icon code
+ * Automatically detects which API is being used
  */
 export function getWeatherIconUrl(icon: string): string {
+  // OpenWeatherMap icons (2-3 character codes like "01d", "10n")
+  if (USE_OPENWEATHERMAP || icon.length <= 3) {
+    return getWeatherIconUrlOWM(icon);
+  }
+
+  // Visual Crossing icons (longer descriptive names)
   return `https://raw.githubusercontent.com/visualcrossing/WeatherIcons/main/PNG/2nd%20Set%20-%20Color/${icon}.png`;
 }
