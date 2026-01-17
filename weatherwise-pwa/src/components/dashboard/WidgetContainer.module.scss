@@ -310,19 +310,21 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: var(--bg-elevated);
-  border: none;
+  background: rgba(0, 0, 0, 0.5); // Darker semi-transparent background
+  border: 1px solid rgba(255, 255, 255, 0.2); // Subtle border for definition
   border-radius: 8px;
-  color: var(--text-primary);
+  color: rgba(255, 255, 255, 0.9); // Light text for contrast
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px); // Glass effect
 
   &:hover {
-    background: var(--bg-primary);
+    background: rgba(0, 0, 0, 0.7); // Even darker on hover
+    border-color: rgba(255, 255, 255, 0.3);
     transform: scale(1.1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   }
 
   &:active {
