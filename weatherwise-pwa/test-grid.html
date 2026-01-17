@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      background: #ebe8e1;
+      padding: 2rem;
+      margin: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-auto-rows: minmax(200px, auto);
+      gap: 24px;
+      align-content: start;
+    }
+
+    .container > * {
+      position: relative !important;
+    }
+
+    .weather-card {
+      grid-column: span 3;
+      grid-row: span 2;
+      background: #1a1a1a;
+      border-radius: 32px;
+      padding: 2rem;
+      color: white;
+    }
+
+    .widget {
+      grid-column: span 1;
+      grid-row: span 1;
+      background: #1a1a1a;
+      border-radius: 28px;
+      padding: 1.5rem;
+      color: white;
+    }
+
+    .widget-2x1 {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+
+    .widget-2x2 {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="color: #1a1a1a; margin-bottom: 2rem;">Grid Test - Michele Du Style</h1>
+
+  <div class="container">
+    <!-- Weather Card 1 (3x2) -->
+    <div class="weather-card">
+      <h2>Oregon</h2>
+      <p>Weather card 3x2</p>
+    </div>
+
+    <!-- Weather Card 2 (3x2) -->
+    <div class="weather-card">
+      <h2>Bali, Indonesia</h2>
+      <p>Weather card 3x2</p>
+    </div>
+
+    <!-- Small Widgets (1x1) -->
+    <div class="widget">
+      <p>Trip Budget 1x1</p>
+    </div>
+
+    <div class="widget">
+      <p>Language 1x1</p>
+    </div>
+
+    <div class="widget">
+      <p>Currency 1x1</p>
+    </div>
+
+    <!-- Large Widget (2x1) -->
+    <div class="widget widget-2x1">
+      <p>Trip Calendar 2x1</p>
+    </div>
+
+    <!-- Another Widget (2x2) -->
+    <div class="widget widget-2x2">
+      <p>Find Flights 2x2</p>
+    </div>
+
+    <div class="widget">
+      <p>Packing 1x1</p>
+    </div>
+  </div>
+</body>
+</html>

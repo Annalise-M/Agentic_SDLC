@@ -90,7 +90,7 @@ const DEFAULT_WIDGETS: Widget[] = [
     position: 5,
     config: {},
     width: 1,
-    height: 2,
+    height: 1,
   },
 ];
 

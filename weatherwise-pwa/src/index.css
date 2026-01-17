@@ -3,14 +3,15 @@
 @tailwind utilities;
 
 /* ============================================
-   Hybrid Theme - WCAG AA Compliant Colors
+   Contrasting Theme - Inspired by Michele Du
+   Light container with dark floating cards
    ============================================ */
 :root {
-  /* Page Backgrounds - Light & Easy on Eyes */
-  --bg-primary: #e8e8e8; /* Light gray page background */
-  --bg-secondary: #1a1a1a; /* Dark cards - WCAG AA compliant */
-  --bg-tertiary: #2d2d2d; /* Lighter dark for better contrast */
-  --bg-elevated: #ffffff; /* White header/modals */
+  /* Page Backgrounds - Light & Airy */
+  --bg-primary: #ebe8e1; /* Light beige/cream page background */
+  --bg-secondary: #1a1a1a; /* Dark cards - floating modules */
+  --bg-tertiary: #252525; /* Lighter dark for hover states */
+  --bg-elevated: #f5f5f0; /* Light elevated elements like header */
 
   /* Text for Dark Backgrounds (on cards/widgets) - WCAG AA Compliant */
   --text-primary: #ffffff; /* White - 15.3:1 ratio on #1a1a1a */
@@ -45,11 +46,11 @@
   --border-light-default: rgba(0, 0, 0, 0.18);
   --border-light-strong: rgba(0, 0, 0, 0.3);
 
-  /* Shadows - Soft for Light Background */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.25);
+  /* Shadows - Strong for Light Background */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.2);
 
   /* Focus States - WCAG AA Compliant */
   --focus-ring: #22d3ee;

@@ -21,25 +21,24 @@
 
 .widgetHeader {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border-subtle);
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
 .widgetTitle {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 
   @media (min-width: 640px) {
-    font-size: 1.125rem;
-  }
-
-  @media (min-width: 1024px) {
-    font-size: 1.25rem;
+    font-size: 0.9375rem;
   }
 }
 
@@ -47,6 +46,7 @@
   font-size: 0.75rem;
   color: var(--text-tertiary);
   margin: 0;
+  margin-left: auto;
   font-weight: 500;
 
   @media (min-width: 640px) {
@@ -76,21 +76,21 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    background: var(--bg-elevated);
-    border-color: var(--border-default);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
   @media (min-width: 640px) {
     padding: 1rem;
-    border-radius: 14px;
+    border-radius: 18px;
   }
 }
 

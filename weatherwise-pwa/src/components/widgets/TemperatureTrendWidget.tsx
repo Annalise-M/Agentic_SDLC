@@ -7,8 +7,9 @@
 
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { format } from 'date-fns';
+import { IoTrendingUp } from 'react-icons/io5';
 import { useLocationStore } from '../../store/locations-store';
 import { useUIStore } from '../../store/ui-store';
 import { useWeather } from '../../lib/hooks/useWeather';
@@ -56,7 +57,10 @@ export function TemperatureTrendWidget() {
   return (
     <div ref={containerRef} className={styles.trendWidget}>
       <div className={styles.widgetHeader}>
-        <h3 className={styles.widgetTitle}>Temperature Trend</h3>
+        <h3 className={styles.widgetTitle}>
+          <IoTrendingUp size={16} style={{ color: 'var(--accent-cyan)' }} />
+          Temperature Trend
+        </h3>
         <p className={styles.widgetSubtitle}>{targetLocation.split(',')[0]}</p>
       </div>
 
@@ -65,8 +69,9 @@ export function TemperatureTrendWidget() {
           <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="tempGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--accent-cyan)" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="var(--accent-cyan)" stopOpacity={0}/>
+                <stop offset="0%" stopColor="var(--accent-cyan)" stopOpacity={0.4}/>
+                <stop offset="50%" stopColor="var(--accent-purple)" stopOpacity={0.2}/>
+                <stop offset="100%" stopColor="var(--accent-cyan)" stopOpacity={0}/>
               </linearGradient>
             </defs>
             <XAxis
@@ -93,7 +98,7 @@ export function TemperatureTrendWidget() {
               }}
               labelStyle={{ color: 'var(--text-primary)', fontSize: '0.875rem', fontWeight: '600' }}
               itemStyle={{ color: 'var(--text-secondary)', fontSize: '0.8125rem' }}
-              formatter={(value: number) => [`${value}${tempSymbol}`, '']}
+              formatter={(value: number | undefined) => value !== undefined ? [`${value}${tempSymbol}`, ''] : ['', '']}
             />
             <Area
               type="monotone"

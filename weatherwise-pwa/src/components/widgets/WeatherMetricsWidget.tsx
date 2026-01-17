@@ -7,7 +7,7 @@
 
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { IoWater, IoEye, IoSunny } from 'react-icons/io5';
+import { IoWater, IoEye, IoSunny, IoSpeedometer } from 'react-icons/io5';
 import { WiStrongWind } from 'react-icons/wi';
 import { useLocationStore } from '../../store/locations-store';
 import { useUIStore } from '../../store/ui-store';
@@ -91,7 +91,10 @@ export function WeatherMetricsWidget() {
   return (
     <div ref={containerRef} className={styles.metricsWidget}>
       <div className={styles.widgetHeader}>
-        <h3 className={styles.widgetTitle}>Current Conditions</h3>
+        <h3 className={styles.widgetTitle}>
+          <IoSpeedometer size={16} style={{ color: 'var(--accent-purple)' }} />
+          Current Conditions
+        </h3>
         <p className={styles.widgetSubtitle}>{targetLocation.split(',')[0]}</p>
       </div>
 

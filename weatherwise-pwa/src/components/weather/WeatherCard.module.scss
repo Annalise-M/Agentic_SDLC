@@ -1,45 +1,49 @@
+// ============================================
+// Weather Card - Michele Du Aesthetic
+// Dark cards on light background
+// ============================================
+
 .weatherCard {
   position: relative;
-  background: white;
+  background: #1a1a1a; // Dark card background
   overflow: hidden;
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 24px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-  height: auto;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 32px; // Large rounded corners
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  height: 100%; // Fill grid cell
+  border: 1px solid rgba(0, 0, 0, 0.1);
 
-  /* Mobile: smaller height to fit with padding */
   @media (max-width: 767px) {
-    border-radius: 16px;
+    border-radius: 24px;
     min-height: auto;
   }
 
-  /* Tablet and up: consistent sizing */
   @media (min-width: 768px) {
-    border-radius: 24px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    border-radius: 32px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   }
 
-  /* Desktop: enhanced shadow on hover */
+  // Floating hover effect - NO transform to keep grid stable
   @media (min-width: 1024px) {
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.14);
 
     &:hover {
-      box-shadow: 0 32px 100px rgba(0, 0, 0, 0.12);
-      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+      // transform: translateY(-4px); // DISABLED - breaks grid layout
     }
   }
 
-  /* Active state - subtle cyan glow */
+  // Active state - NO transform to keep grid stable
   &.isActive {
     box-shadow:
       0 0 0 2px var(--accent-cyan),
-      0 12px 40px rgba(34, 211, 238, 0.15);
-    transform: scale(1.02);
+      0 4px 20px rgba(34, 211, 238, 0.2);
+    // transform: translateY(-2px); // DISABLED - breaks grid layout
 
     @media (min-width: 1024px) {
       box-shadow:
         0 0 0 2px var(--accent-cyan),
-        0 24px 80px rgba(34, 211, 238, 0.2);
+        0 8px 32px rgba(34, 211, 238, 0.25);
     }
   }
 }
@@ -50,18 +54,16 @@
   flex-direction: column;
   overflow: hidden;
 
-  /* Mobile: fixed viewport height */
-  height: 100vh;
-  height: 100dvh;
+  // Default: auto height for grid layout
+  height: auto;
+  min-height: 500px;
 
-  /* Tablet and up: min-height instead */
   @media (min-width: 768px) {
-    height: auto;
-    min-height: 600px;
+    min-height: 550px;
   }
 
   @media (min-width: 1024px) {
-    min-height: 650px;
+    min-height: 600px;
     justify-content: flex-end;
   }
 }
@@ -104,10 +106,8 @@
   z-index: 2;
   color: white;
 
-  /* Mobile: tighter padding to maximize content space */
   padding: 1.25rem 1.5rem 1rem;
 
-  /* Tablet and up: more generous padding */
   @media (min-width: 768px) {
     padding: 1.75rem 1.75rem 1.5rem;
   }
@@ -216,14 +216,12 @@
   flex-direction: column;
   gap: 1.5rem;
 
-  /* Mobile: scrollable content, tighter padding */
   padding: 1.25rem 1.5rem 2rem;
   margin-top: 180px;
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 
-  /* Tablet and up: more padding, no forced scroll */
   @media (min-width: 768px) {
     padding: 1.5rem 2rem 2rem;
     overflow-y: visible;
@@ -235,10 +233,8 @@
   display: flex;
   flex-direction: column;
 
-  /* Mobile: tighter gap */
   gap: 1.25rem;
 
-  /* Tablet and up: more spacing */
   @media (min-width: 768px) {
     gap: 2rem;
   }
@@ -250,10 +246,8 @@
   justify-content: space-between;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 
-  /* Mobile: tighter padding */
   padding-bottom: 1rem;
 
-  /* Tablet and up: more spacing */
   @media (min-width: 768px) {
     padding-bottom: 1.5rem;
   }
@@ -352,11 +346,9 @@
 .forecastSection {
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 
-  /* Mobile: tighter spacing */
   margin-top: 1rem;
   padding-top: 1rem;
 
-  /* Tablet and up: more spacing */
   @media (min-width: 768px) {
     margin-top: 1.5rem;
     padding-top: 1.5rem;
@@ -385,7 +377,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid rgba(59, 130, 246, 0.8);
+    outline: 2px solid rgba(34, 211, 238, 0.8);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -491,13 +483,19 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
+// ============================================
+// Loading State - Dark card
+// ============================================
+
 .loadingCard {
   position: relative;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  background: #1a1a1a; // Dark card
+  border-radius: 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   overflow: hidden;
-  height: 384px;
+  height: 100%; // Fill grid cell
+  min-height: 400px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .loadingContainer {
@@ -507,7 +505,7 @@
 }
 
 .loadingSkeleton {
-  background: #e5e7eb;
+  background: rgba(255, 255, 255, 0.05);
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -520,7 +518,7 @@
 
 .skeletonTitle {
   height: 2rem;
-  background: #e5e7eb;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   width: 50%;
   animation: pulse 2s ease-in-out infinite;
@@ -528,7 +526,7 @@
 
 .skeletonTemp {
   height: 5rem;
-  background: #e5e7eb;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   animation: pulse 2s ease-in-out infinite;
 }
@@ -541,7 +539,7 @@
 
 .skeletonMetric {
   height: 4rem;
-  background: #e5e7eb;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   animation: pulse 2s ease-in-out infinite;
 }
@@ -555,13 +553,18 @@
   }
 }
 
+// ============================================
+// Error State - Dark card
+// ============================================
+
 .errorCard {
   position: relative;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  background: #1a1a1a; // Dark card
+  border-radius: 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   overflow: hidden;
   padding: 3rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .errorHeader {
@@ -574,23 +577,43 @@
 .errorTitle {
   font-size: 1.875rem;
   font-weight: 700;
-  color: #111827;
+  color: white;
+}
+
+.removeButton {
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+  }
 }
 
 .errorContent {
-  background: #fef2f2;
+  background: rgba(239, 68, 68, 0.1);
   border-left: 4px solid #ef4444;
   padding: 1.5rem;
+  border-radius: 8px;
 }
 
 .errorHeading {
   font-weight: 600;
-  color: #7f1d1d;
+  color: #ef4444;
   margin-bottom: 0.5rem;
 }
 
 .errorMessage {
   font-size: 0.875rem;
-  color: #991b1b;
+  color: rgba(255, 255, 255, 0.8);
 }
-
